@@ -91,7 +91,7 @@ function SignIn() {
                     },
                   ]}
                 >
-                  <Input placeholder="Password" />
+                  <Input.Password placeholder="Password"/>
                 </Form.Item>
 
                 <Form.Item>

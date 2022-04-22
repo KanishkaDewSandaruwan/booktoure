@@ -1,15 +1,5 @@
-/*!
-  =========================================================
-  * Muse Ant Design Dashboard - v1.0.0
-  =========================================================
-  * Product Page: https://www.creative-tim.com/product/muse-ant-design-dashboard
-  * Copyright 2021 Creative Tim (https://www.creative-tim.com)
-  * Licensed under MIT (https://github.com/creativetimofficial/muse-ant-design-dashboard/blob/main/LICENSE.md)
-  * Coded by Creative Tim
-  =========================================================
-  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 
 import {
   Card,
@@ -29,6 +19,7 @@ import {
   MenuUnfoldOutlined,
   RightOutlined,
 } from "@ant-design/icons";
+import { useHistory } from 'react-router-dom'
 import Paragraph from "antd/lib/typography/Paragraph";
 
 import Echart from "../components/chart/EChart";
@@ -47,6 +38,15 @@ import team4 from "../assets/images/team-4.jpg";
 import card from "../assets/images/info-card-1.jpg";
 
 function Home() {
+
+  const history = useHistory();
+  
+  useEffect(() => {
+    if(!localStorage.getItem('author')){
+      history.push('/sign-in');
+    }
+  })
+
   const { Title, Text } = Typography;
 
   const onChange = (e) => console.log(`radio checked:${e.target.value}`);

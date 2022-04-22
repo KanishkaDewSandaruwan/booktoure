@@ -8,7 +8,10 @@ import {
   UserOutlined,
   BookOutlined,
   DownloadOutlined,
-  DollarOutlined
+  DollarOutlined,
+  UserAddOutlined,
+  BorderInnerOutlined,
+  SettingOutlined
 } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 
@@ -194,7 +197,7 @@ function Sidenav({ color }) {
                   background: page === "customer" ? color : "",
                 }}
               >
-                <TeamOutlined />
+                <UserOutlined />
               </span>
               <span className="label">Customer</span>
             </NavLink>
@@ -207,12 +210,25 @@ function Sidenav({ color }) {
                   background: page === "books" ? color : "",
                 }}
               >
-                <TeamOutlined />
+                <BookOutlined />
               </span>
               <span className="label">Books</span>
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="2">
+          <Menu.Item key="3">
+            <NavLink to="/download">
+              <span
+                className="icon"
+                style={{
+                  background: page === "download" ? color : "",
+                }}
+              >
+                <DownloadOutlined />
+              </span>
+              <span className="label">Downloads</span>
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="4">
             <NavLink to="/category">
               <span
                 className="icon"
@@ -220,12 +236,12 @@ function Sidenav({ color }) {
                   background: page === "category" ? color : "",
                 }}
               >
-                <TeamOutlined />
+                <BorderInnerOutlined />
               </span>
               <span className="label">Category</span>
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="3">
+          <Menu.Item key="5">
             <NavLink to="/author">
               <span
                 className="icon"
@@ -233,11 +249,28 @@ function Sidenav({ color }) {
                   background: page === "author" ? color : "",
                 }}
               >
-                <TeamOutlined />
+                <UserAddOutlined />
               </span>
               <span className="label">Author</span>
             </NavLink>
           </Menu.Item>
+          <Menu.Item className="menu-item-header" key="5">
+            Customization Pages
+          </Menu.Item>
+          <Menu.Item key="6">
+            <NavLink to="/settings">
+              <span
+                className="icon"
+                style={{
+                  background: page === "profile" ? color : "",
+                }}
+              >
+                <SettingOutlined />
+              </span>
+              <span className="label">Settings</span>
+            </NavLink>
+          </Menu.Item>
+
           <Menu.Item className="menu-item-header" key="5">
             Account Pages
           </Menu.Item>
@@ -254,18 +287,8 @@ function Sidenav({ color }) {
               <span className="label">Profile</span>
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="7">
-            <NavLink to="/sign-in">
-              <span className="icon"><TeamOutlined /></span>
-              <span className="label">Sign In</span>
-            </NavLink>
-          </Menu.Item>
-          <Menu.Item key="8">
-            <NavLink to="/sign-up">
-              <span className="icon"><TeamOutlined /></span>
-              <span className="label">Sign Up</span>
-            </NavLink>
-          </Menu.Item>
+
+          
         </Menu>
         :
 

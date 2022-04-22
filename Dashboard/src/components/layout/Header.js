@@ -255,6 +255,12 @@ function Header({
   }
 
   const history = useHistory();
+  useEffect(() => {
+    if(!localStorage.getItem('author')){
+      history.push('/sign-in');
+    }
+  })
+
 
   const [visible, setVisible] = useState(false);
   const [sidenavType, setSidenavType] = useState("transparent");

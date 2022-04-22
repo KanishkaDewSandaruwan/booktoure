@@ -12,6 +12,7 @@ import Download from "./pages/Download";
 import Payments from "./pages/Payments";
 import Category from "./pages/Category";
 import Author from "./pages/Author";
+import Settings from "./pages/Setting";
 import "antd/dist/antd.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
@@ -32,6 +33,7 @@ function App() {
           <Route exact path="/category" component={Category} />
           <Route exact path="/author" component={Author} />
           <Route exact path="/profile" component={Profile} />
+          <Route exact path="/settings" component={Settings} />
           <Redirect from="*" to="/dashboard" />
         </Main>
       </Switch>

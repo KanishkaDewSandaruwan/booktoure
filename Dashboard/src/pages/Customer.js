@@ -136,7 +136,7 @@ import {
               <Card
                 bordered={false}
                 className="criclebox tablespace mb-24"
-                title="Customer Table"
+                title="Customer Details"
                 >
 
                 <div className="table-responsive">

@@ -11,6 +11,7 @@ import {
     Typography,
     Popconfirm,
     Modal,
+    Space,
 } from "antd";
 import {
     Form,
@@ -19,11 +20,11 @@ import {
     Select,
 } from 'antd';
 import Axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 // Images
 import face2 from "../assets/images/face-2.jpg";
-import { PlusOutlined, UploadOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusOutlined, UploadOutlined, DeleteOutlined, EditOutlined, FileImageOutlined } from '@ant-design/icons';
 import ClearableLabeledInput from "antd/lib/input/ClearableLabeledInput";
 
 const { Title } = Typography;
@@ -52,10 +53,14 @@ function Category() {
     const [form2] = Form.useForm();
     const [fileList, setFileList] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalVisibleImageUpload, setIsModalVisibleImageUpload] = useState(false);
     const [category, setCategory] = useState([]);
     const [isedit, setIsEdit] = useState(true);
 
     const [editerData, setEditerData] = useState([]);
+    const [catid, setCategoryID] = useState();
+
+    const history = useHistory();
 
     const [cat_id, setCatID] = useState();
     const [image, setImage] = useState();
@@ -83,35 +88,24 @@ function Category() {
                 );
             },
         },
-        ,
         {
-            title: "Edit Name",
-            key: "edit",
-            render: (recode) => {
-                return (
-                    <>
-                        <Button onClick={() => {
-                            showModal();
-                            setIsEdit(false);
-                            editCategory(recode);
-                        }} type="primary" icon={<EditOutlined />}>Edit</Button>
-                    </>
-                );
-            },
-        },
-
-        ,
-        {
-            title: "Change Image",
+            title: "Change Category details",
             key: "changeimage",
             render: (recode) => {
                 return (
                     <>
-                        <Button onClick={() => {
-                            showModal();
-                            setIsEdit(false);
-                            editCategory(recode);
-                        }} type="primary" icon={<EditOutlined />}>Edit</Button>
+                        <Space direction="vertical" size="small" style={{ display: 'flex' }}>
+                            <Button onClick={() => {
+                                showModal();
+                                setIsEdit(false);
+                                setCategoryID(recode.cat_id);
+                            }} type="primary" icon={<EditOutlined />}>Edit Details</Button>
+
+                            <Button onClick={() => {
+                                showModalImage();
+                                setCategoryID(recode.cat_id);
+                            }} type="primary" icon={<FileImageOutlined />}>Change Image</Button>
+                        </Space>
                     </>
                 );
             },
@@ -130,7 +124,7 @@ function Category() {
                             cancelText="No"
                         >
                             <Button onClick={() => {
-                                setCatID(recode);
+                                setCatID(recode.cat_id);
                             }} type="primary" icon={<DeleteOutlined />}>Delete</Button>
                         </Popconfirm>
                     </>
@@ -144,7 +138,12 @@ function Category() {
     }
 
     const cancel = (e) => {
+        history.push('/category');
+    }
 
+    const handleCancelImageUpload = () => {
+        setIsModalVisibleImageUpload(false);
+        history.push('/category');
     }
 
     const deleteCategory = (cat_id) => {
@@ -155,6 +154,7 @@ function Category() {
 
     const handleUpload = ({ fileList }) => {
         setFileList(fileList);
+        history.push('/category');
     }
 
     useEffect(() => {
@@ -171,6 +171,10 @@ function Category() {
         getCategory();
         setIsModalVisible(true);
     };
+    const showModalImage = () => {
+        getCategory();
+        setIsModalVisibleImageUpload(true);
+    };
 
     const handleOk = () => {
         setIsModalVisible(false);
@@ -182,6 +186,26 @@ function Category() {
         form.resetFields();
     };
 
+    const editcategoryimage = {
+        name: "image",
+        action: `http://localhost:3001/category/edit/editimageupload/${catid}`,
+        headers: {
+            authorization: "authorization-text",
+        },
+        onChange(info) {
+            if (info.file.status !== "uploading") {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === "done") {
+                setCategoryID("");
+                message.success(`${info.file.name} file uploaded successfully`);
+                form.resetFields();
+            } else if (info.file.status === "error") {
+                message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+    };
+
     const onFinish = (values) => {
         const data = new FormData();
 
@@ -191,42 +215,29 @@ function Category() {
         Axios.post('http://localhost:3001/category/new', data)
             .then((respons) => {
                 handleCancel();
+                history.push('/category');
                 message.success('Category Adding Success!');
             }).catch((err) => {
                 console.log(err);
             })
-            
+
     };
 
-    const editCategory = (recode) => {
-        setEditerData(recode)
+    const onFinishEditUpload = () => {
+        setIsModalVisibleImageUpload(false);
+        history.push('/category');
     }
 
     const onFinishEdit = (values) => {
-        const data = new FormData();
-        const data2 = new FormData();
-
-        data.append('file', fileList[0].originFileObj);
-        data.append('cat_id', editerData.cat_id);
-
-        data2.append('cat_name', values.cat_name);
-        data2.append('cat_id', editerData.cat_id);
-
         if (values.cat_name) {
-            Axios.put('http://localhost:3001/category/edit', data2
+            Axios.put(`http://localhost:3001/category/edit/${catid}`, values
             ).then((respons) => {
                 handleCancel();
+                setCategoryID("");
+                history.push('/category');
                 message.success('Category Name Save Success!');
             })
         }
-        if (values.file) {
-            Axios.put('http://localhost:3001/category/edit/imageupload', data
-            ).then((respons) => {
-                handleCancel();
-                message.success('Category Image Upload Success!');
-            })
-        }
-
     }
 
     return (
@@ -237,7 +248,7 @@ function Category() {
                         <Card
                             bordered={false}
                             className="criclebox tablespace mb-24"
-                            title="Category Table"
+                            title="Category Details"
                             extra={
                                 <>
                                     <Button type="primary" icon={<PlusOutlined />} onClick={showModal} >Add New</Button>
@@ -268,7 +279,7 @@ function Category() {
                                             :
 
                                             <Form
-                                                name="basic"
+                                                name="editCategory"
                                                 onFinish={onFinishEdit}
                                                 // onFinishFailed={onFinishFailed}
                                                 form={form} >
@@ -276,18 +287,23 @@ function Category() {
                                                 <Form.Item label="Edit Category Name" name="cat_name">
                                                     <Input />
                                                 </Form.Item>
-                                                <Form.Item label="Image" name="file">
-                                                    <Upload
-                                                        istType="picture-card"
-                                                        fileList={fileList}
-                                                        // onPreview={handlePreview}
-                                                        onChange={handleUpload}
-                                                        beforeUpload={() => false}
-                                                    >
-                                                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                                                    </Upload>
-                                                </Form.Item>
                                             </Form>}
+                                    </Modal>
+
+                                    <Modal title="Change Images" okText="Finish" visible={isModalVisibleImageUpload} onOk={form2.submit} onCancel={handleCancelImageUpload}>
+                                        <Form
+                                            name="edituploadimage"
+                                            onFinish={onFinishEditUpload}
+                                            // onFinishFailed={onFinishFailed}
+                                            form={form2} >
+
+                                            <Form.Item label="Image" name="image">
+                                                <Upload
+                                                    {...editcategoryimage}>
+                                                    <Button icon={<UploadOutlined />}>Upload Image</Button>
+                                                </Upload>
+                                            </Form.Item>
+                                        </Form>
                                     </Modal>
                                 </>
                             }
