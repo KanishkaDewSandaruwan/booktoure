@@ -23,7 +23,7 @@ import {
   Select,
 } from 'antd';
 import Axios from 'axios';
-import { his, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 // Images
 import face2 from "../assets/images/face-2.jpg";
@@ -212,7 +212,7 @@ function Book() {
       })
   }
   const onFinish = (values) => {
-    const data = new FormData();
+    let data = new FormData();
 
     if (fileList[0] != null) {
 
