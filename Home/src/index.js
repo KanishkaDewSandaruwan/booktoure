@@ -17,6 +17,8 @@ import Landing from "views/Landing.js";
 import Profile from "views/Profile.js";
 import Index from "views/Index.js";
 import Category from "views/Category.js";
+import Cart from "views/Cart.js";
+import Downloads from "views/Downloads";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -25,10 +27,12 @@ ReactDOM.render(
       <Route path="/admin" component={Admin} />
       <Route path="/auth" component={Auth} />
       {/* add routes without layouts */}
-      <Route path="/landing" exact component={Landing} />
+      <Route path="/landing" exact component={Index} />
       <Route path="/category/:cat_id" exact component={Category} />
+      <Route path="/cart" exact component={Cart} />
       <Route path="/profile" exact component={Profile} />
-      <Route path="/" exact component={Index} />
+      <Route path="/" exact component={Landing} />
+      <Route path="/downloads" exact component={Downloads} />
       {/* add redirect for first page */}
       <Redirect from="*" to="/" />
     </Switch>

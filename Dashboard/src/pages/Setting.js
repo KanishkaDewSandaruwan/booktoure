@@ -34,8 +34,11 @@ function Settings() {
 
     const [form] = Form.useForm();
     const [form2] = Form.useForm();
+    const [form3] = Form.useForm();
     const [fileList, setFileList] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalAboutVisible, setisModalAboutVisible] = useState(false);
+    const [isModalServiceVisible, setisModalServiceVisible] = useState(false);
     const [isModalVisibleImageUpload, setIsModalVisibleImageUpload] = useState(false);
 
     const [editerData, setEditerData] = useState([]);
@@ -65,6 +68,13 @@ function Settings() {
     const showModal = () => {
         setIsModalVisible(true);
     };
+
+    const showAboutModal = () => {
+        setisModalAboutVisible(true);
+    };
+    const showModalService = () => {
+        setisModalServiceVisible(true);
+    };
     const showModalImage = () => {
         setIsModalVisibleImageUpload(true);
     };
@@ -77,14 +87,22 @@ function Settings() {
         setIsModalVisible(false);
         form.resetFields();
     };
+    const AbouthandleCancel = () => {
+        setisModalAboutVisible(false);
+        form2.resetFields();
+    };
+    const ServicehandleCancel = () => {
+        setisModalServiceVisible(false);
+        form3.resetFields();
+    };
 
     const handleUpload = ({ fileList }) => {
         setFileList(fileList);
     }
 
-    const editcategoryimage = {
-        name: "image",
-        action: `http://localhost:3001/category/edit/editimageupload/${catid}`,
+    const subPageHeaderChange = {
+        name: "subheader",
+        action: "http://localhost:3001/settings/changesubheader",
         headers: {
             authorization: "authorization-text",
         },
@@ -93,13 +111,93 @@ function Settings() {
                 console.log(info.file, info.fileList);
             }
             if (info.file.status === "done") {
-                setCategoryID("");
                 message.success(`${info.file.name} file uploaded successfully`);
-                form.resetFields();
+                window.location.href='/settings';
             } else if (info.file.status === "error") {
                 message.error(`${info.file.name} file upload failed.`);
             }
         },
+    };
+    const loginImageChange = {
+        name: "logheader",
+        action: "http://localhost:3001/settings/changeLoginHeader",
+        headers: {
+            authorization: "authorization-text",
+        },
+        onChange(info) {
+            if (info.file.status !== "uploading") {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === "done") {
+                message.success(`${info.file.name} file uploaded successfully`);
+                window.location.href='/settings';
+            } else if (info.file.status === "error") {
+                message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+    };
+    const AdminloginImageChange = {
+        name: "adminlogin",
+        action: "http://localhost:3001/settings/changeadminLoginHeader",
+        headers: {
+            authorization: "authorization-text",
+        },
+        onChange(info) {
+            if (info.file.status !== "uploading") {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === "done") {
+                message.success(`${info.file.name} file uploaded successfully`);
+                window.location.href='/settings';
+            } else if (info.file.status === "error") {
+                message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+    };
+
+    const onFinishService = (values) => {
+        const data = new FormData();
+
+        if (fileList[0] != null) {
+
+            data.append('service_image', fileList[0].originFileObj);
+            data.append('description', values.description);
+
+            Axios.post('http://localhost:3001/settings/changeservice', data)
+                .then((respons) => {
+                    setisModalServiceVisible();
+                    history.push('/settings');
+                    form3.resetFields();
+                    message.success('Service Detail Change Success!');
+                }).catch((err) => {
+                    console.log(err);
+                })
+        } else {
+            message.warning('Please Select Image to Change About!');
+        }
+
+    };
+    const onFinishAbout = (values) => {
+        const data = new FormData();
+
+        if (fileList[0] != null) {
+
+            data.append('about', fileList[0].originFileObj);
+            data.append('description', values.description);
+
+            Axios.post('http://localhost:3001/settings/changeabout', data)
+                .then((respons) => {
+                    AbouthandleCancel();
+                    history.push('/settings');
+                    form2.resetFields();
+                    message.success('About Detail Change Success!');
+                }).catch((err) => {
+                    console.log(err);
+                })
+        } else {
+            message.warning('Please Select Image to Change About!');
+        }
+
     };
 
     const onFinish = (values) => {
@@ -154,7 +252,109 @@ function Settings() {
                                         ))}
                                     </Col>
                                 </Row>
-                               
+
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={6}>
+                                        <Button type="primary" icon={<PlusOutlined />} onClick={showModalService} >Change Service Details</Button>
+                                    </Col>
+                                </Row>
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={12}>
+                                        {header.map((val, key) => (
+                                            <>
+                                                <Row><h>{val.service_description}</h></Row>
+                                                <img src={'http://localhost:3001/settings/' + val.service_image} />
+                                            </>
+                                        ))}
+                                    </Col>
+                                </Row>
+
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={6}>
+                                        <Button type="primary" icon={<PlusOutlined />} onClick={showAboutModal} >Change About Details</Button>
+                                    </Col>
+                                </Row>
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={12}>
+                                        {header.map((val, key) => (
+                                            <>
+                                                <Row><h>Header Description : {val.about_description}</h></Row>
+                                                <img src={'http://localhost:3001/settings/' + val.about_image} />
+                                            </>
+                                        ))}
+                                    </Col>
+                                </Row>
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={6}>
+                                        <Form
+                                            name="subheaderForm">
+                                            <Form.Item  name="subheader">
+                                                <Upload
+                                                    {...subPageHeaderChange}
+                                                >
+                                                    <Button type="primary" icon={<UploadOutlined />}>Upload Sub Header</Button>
+                                                </Upload>
+                                            </Form.Item>
+                                        </Form>
+                                    </Col>
+                                </Row>
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={12}>
+                                        {header.map((val, key) => (
+                                            <>
+                                                <img src={'http://localhost:3001/settings/' + val.second_header_image} />
+                                            </>
+                                        ))}
+                                    </Col>
+                                </Row>
+
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={6}>
+                                        <Form
+                                            name="loginimageform">
+                                            <Form.Item  name="logheader">
+                                                <Upload
+                                                    {...loginImageChange}
+                                                >
+                                                    <Button type="primary" icon={<UploadOutlined />}>Upload Customer Login Page Image</Button>
+                                                </Upload>
+                                            </Form.Item>
+                                        </Form>
+                                    </Col>
+                                </Row>
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={12}>
+                                        {header.map((val, key) => (
+                                            <>
+                                                <img src={'http://localhost:3001/settings/' + val.loginImage} />
+                                            </>
+                                        ))}
+                                    </Col>
+                                </Row>
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={6}>
+                                        <Form
+                                            name="adminloginForm">
+                                            <Form.Item  name="adminlogin">
+                                                <Upload
+                                                    {...AdminloginImageChange}
+                                                >
+                                                    <Button type="primary" icon={<UploadOutlined />}>Upload Admin Login Image</Button>
+                                                </Upload>
+                                            </Form.Item>
+                                        </Form>
+                                    </Col>
+                                </Row>
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={12}>
+                                        {header.map((val, key) => (
+                                            <>
+                                                <img src={'http://localhost:3001/settings/' + val.adminLoginImage} />
+                                            </>
+                                        ))}
+                                    </Col>
+                                </Row>
+
                             </Space>
                             <Modal title="Home Page Manage" okText="Finish" onOk={form.submit} visible={isModalVisible} onCancel={handleCancel}>
                                 <Form
@@ -171,6 +371,53 @@ function Settings() {
                                         <Input />
                                     </Form.Item>
                                     <Form.Item label="Header Image" name="header">
+                                        <Upload
+                                            istType="picture-card"
+                                            fileList={fileList}
+                                            // onPreview={handlePreview}
+                                            onChange={handleUpload}
+                                            beforeUpload={() => false}
+                                        >
+                                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                        </Upload>
+                                    </Form.Item>
+                                </Form>
+                            </Modal>
+                            <Modal title="About Manage" okText="Finish" onOk={form2.submit} visible={isModalAboutVisible} onCancel={AbouthandleCancel}>
+                                <Form
+                                    name="UploadForm"
+                                    onFinish={onFinishAbout}
+                                    // onFinishFailed={onFinishFailed}
+                                    form={form2} >
+                                    <Form.Item label="Description" name="description"
+                                        rules={[{ required: true, message: 'Please Enter Description' }]}>
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item label="About Image" name="header">
+                                        <Upload
+                                            istType="picture-card"
+                                            fileList={fileList}
+                                            // onPreview={handlePreview}
+                                            onChange={handleUpload}
+                                            beforeUpload={() => false}
+                                        >
+                                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                        </Upload>
+                                    </Form.Item>
+                                </Form>
+                            </Modal>
+
+                            <Modal title="Service Manage" okText="Finish" onOk={form3.submit} visible={isModalServiceVisible} onCancel={ServicehandleCancel}>
+                                <Form
+                                    name="UploadForm"
+                                    onFinish={onFinishService}
+                                    // onFinishFailed={onFinishFailed}
+                                    form={form3} >
+                                    <Form.Item label="Description" name="description"
+                                        rules={[{ required: true, message: 'Please service Enter Description' }]}>
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item label="Service Image" name="service_image">
                                         <Upload
                                             istType="picture-card"
                                             fileList={fileList}

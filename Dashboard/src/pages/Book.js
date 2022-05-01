@@ -23,7 +23,7 @@ import {
   Select,
 } from 'antd';
 import Axios from 'axios';
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 // Images
 import face2 from "../assets/images/face-2.jpg";
@@ -49,6 +49,9 @@ function Book() {
   const [isedit, setIsEdit] = useState(true);
   const [isUploadModalVisible, setIsUploadModalVisible] = useState(false);
   const [uploadbookid, setUploadBookID] = useState();
+
+  const [loginID, setLoginID] = useState([]);
+  const [loginEmail, setloginEmail] = useState([]);
 
   const confirm = () => {
     deleteBook(bookid)
@@ -87,8 +90,27 @@ function Book() {
   }
 
   useEffect(() => {
-    getBook();
+    if (!localStorage.getItem('author')) {
+      history.push('/sign-in');
+    } else {
+      setloginEmail(localStorage.getItem('author'))
+
+      if (loginEmail != 'admin') {
+        Axios.get(`http://localhost:3001/author/getauthorid/${loginEmail}`).then((respons) => {
+          setLoginID(respons.data[0].author_id);
+          getBookByID();
+        })
+      } else {
+        getBook();
+      }
+    }
   })
+
+  const getBookByID = () => {
+    Axios.get(`http://localhost:3001/book/viewbyid/${loginID}`).then((respons) => {
+      setBook(respons.data);
+    })
+  }
 
   const deleteBook = (bookid) => {
     Axios.delete(`http://localhost:3001/book/delete/${bookid}`).then((res) => {
@@ -218,7 +240,11 @@ function Book() {
 
       data.append('file', fileList[0].originFileObj);
       data.append('title', values.title);
-      data.append('author', values.author);
+      if(loginEmail == 'admin'){
+        data.append('author', values.author);
+      }else{
+        data.append('author', loginID);
+      }
       data.append('description', values.description);
       data.append('price', values.price);
       data.append('pdf', pdfrespons.file.name);
@@ -228,11 +254,12 @@ function Book() {
         .then((respons) => {
           handleCancel();
           message.success('Book Adding Success!');
+          form.resetFields();
           history.push('/book');
         }).catch((err) => {
           console.log(err);
         })
-    }else{
+    } else {
       message.warning('Please Select Image');
     }
   };
@@ -267,13 +294,15 @@ function Book() {
                       >
                         <Input />
                       </Form.Item>
-                      <Form.Item onClick={getAuthor} label="Author" name="author">
-                        <Select>
-                          {author.map((val, key) => {
-                            return <><Select.Option value={val.author_id}>{val.name}</Select.Option></>
-                          })}
-                        </Select>
-                      </Form.Item>
+                      {loginEmail == 'admin' ?
+                        <Form.Item onClick={getAuthor} label="Author" name="author">
+                          <Select>
+                            {author.map((val, key) => {
+                              return <><Select.Option value={val.author_id}>{val.name}</Select.Option></>
+                            })}
+                          </Select>
+                        </Form.Item>
+                        : <></>}
                       <Form.Item label="Category" name="category">
                         <Select>
                           {category.map((val, key) => {
@@ -319,13 +348,15 @@ function Book() {
                         <Form.Item label="Edit Book Title" name="title">
                           <Input />
                         </Form.Item>
-                        <Form.Item onClick={getAuthor} label="Author" name="author">
-                          <Select>
-                            {author.map((val, key) => {
-                              return <><Select.Option value={val.author_id}>{val.name}</Select.Option></>
-                            })}
-                          </Select>
-                        </Form.Item>
+                        {loginEmail == 'admin' ?
+                          <Form.Item onClick={getAuthor} label="Author" name="author">
+                            <Select>
+                              {author.map((val, key) => {
+                                return <><Select.Option value={val.author_id}>{val.name}</Select.Option></>
+                              })}
+                            </Select>
+                          </Form.Item>
+                          : <></>}
                         <Form.Item label="Category" name="category">
                           <Select>
                             {category.map((val, key) => {

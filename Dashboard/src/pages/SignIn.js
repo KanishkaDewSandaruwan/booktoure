@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useHistory , Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { useHistory, Link } from 'react-router-dom'
 import {
   Layout,
   Button,
@@ -17,8 +17,9 @@ import signinbg from "../assets/images/img-signin.jpg";
 const { Title } = Typography;
 const { Footer, Content } = Layout;
 function SignIn() {
-  
+
   let history = useHistory();
+  const [imageURL, setImageURL] = useState([]);
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("author");
@@ -26,6 +27,7 @@ function SignIn() {
     if (loggedInUser) {
       history.push('/dashboard')
     }
+    loadImage();
   });
 
   const onFinish = (values) => {
@@ -34,15 +36,20 @@ function SignIn() {
     Axios.post('http://localhost:3001/author/authorLogin', values
     ).then((respons) => {
 
-      if(respons.data.message){
+      if (respons.data.message) {
         message.error(respons.data.message)
-      }else{
+      } else {
         localStorage.setItem('author', respons.data[0].email)
         history.push('/dashboard')
       }
     })
   };
 
+  const loadImage = () => {
+    Axios.get('http://localhost:3001/settings/viewHeader').then((respons) => {
+      setImageURL(respons.data[0].adminLoginImage);
+    })
+  }
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -91,7 +98,7 @@ function SignIn() {
                     },
                   ]}
                 >
-                  <Input.Password placeholder="Password"/>
+                  <Input.Password placeholder="Password" />
                 </Form.Item>
 
                 <Form.Item>
@@ -118,7 +125,7 @@ function SignIn() {
               lg={{ span: 12 }}
               md={{ span: 12 }}
             >
-              <img src={signinbg} alt="" />
+              <img src={`http://localhost:3001/settings/${imageURL}`} alt="" />
             </Col>
           </Row>
         </Content>

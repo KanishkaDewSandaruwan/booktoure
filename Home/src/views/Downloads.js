@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { message, PageHeader } from "antd";
+import { message } from "antd";
 
 import Navbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
@@ -7,11 +7,10 @@ import { useState } from "react";
 import Axios from 'axios';
 import { useHistory } from "react-router-dom";
 
-
-export default function Category(props) {
+export default function Downloads() {
 
     const history = useHistory();
-    const [category, setCategory] = useState(props.match.params);
+    const [category, setCategory] = useState();
     const [header, setHeader] = useState([]);
     const [getBook, setGetBook] = useState([]);
 
@@ -45,7 +44,7 @@ export default function Category(props) {
 
     const loadData = () => {
         getHeader();
-        loadBook();
+        // loadBook();
     }
 
     const loadBook = () => {
@@ -59,17 +58,6 @@ export default function Category(props) {
             setHeader(respons.data);
         })
     }
-
-    const routes = [
-        {
-            path: '/',
-            breadcrumbName: 'Home',
-        },
-        {
-            path: 'Category',
-            breadcrumbName: 'Category',
-        },
-    ];
     return (
         <>
             <Navbar onLoad={loadData} transparent />
@@ -88,17 +76,8 @@ export default function Category(props) {
                                 <span
                                     id="blackOverlay"
                                     className="w-full h-full absolute opacity-50 bg-black"
-                                ></span>
+                                >Cart</span>
                             </div>
-                        </section>
-                        <section className="relative bg-danger block h-100-px">
-                            <PageHeader
-                                onBack={() => window.history.back()}
-                                className="site-page-header"
-                                title="Books"
-                                breadcrumb={{ routes }}
-                                style={{ backgroundColor: '#fff', borderTop: '5px solid black' }}
-                            />
                         </section>
                     </>
                     )

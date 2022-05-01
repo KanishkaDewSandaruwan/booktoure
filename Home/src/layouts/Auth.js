@@ -31,7 +31,7 @@ export default function Auth() {
       <main>
         {header.map((val, key) => {
 
-          const ImageURL = 'http://localhost:3001/settings/'+ val.header_image;
+          const ImageURL = 'http://localhost:3001/settings/'+ val.loginImage;
           return (
           <section className="relative w-full h-full py-40 min-h-screen">
             <div

@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPopper } from "@popperjs/core";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUsers } from '@fortawesome/free-solid-svg-icons'
 
 const IndexDropdown = () => {
   // dropdown props
@@ -27,7 +29,7 @@ const IndexDropdown = () => {
           dropdownPopoverShow ? closeDropdownPopover() : openDropdownPopover();
         }}
       >
-        Demo Pages
+       <FontAwesomeIcon icon={faUsers} size='2x' />
       </a>
       <div
         ref={popoverDropdownRef}
