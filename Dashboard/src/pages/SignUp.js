@@ -110,6 +110,24 @@ function SignUp() {
                 </Form.Item>
 
                 <Form.Item
+                  name="facebook"
+                  rules={[
+                    { required: true, message: "Please Add Your Facebook Link!" },
+                  ]}
+                >
+                  <Input placeholder="Facebook Link" />
+                </Form.Item>
+
+                <Form.Item
+                  name="twitter"
+                  rules={[
+                    { required: true, message: "Please Add Your Twitter Link!" },
+                  ]}
+                >
+                  <Input placeholder="Twitter Link" />
+                </Form.Item>
+
+                <Form.Item
                   name="gender"
                   rules={[
                     { required: true, message: "Please Select Gender" },
@@ -234,16 +252,6 @@ function SignUp() {
                     disabled={enable}
                   >
                     Finish Registration
-                  </Button>
-                </Form.Item>
-                <Form.Item>
-                  <Button
-                    style={{ width: "100%" }}
-                    type="primary"
-                    htmlType="button"
-                    onClick={() => { setNext(true) }}
-                  >
-                    Back
                   </Button>
                 </Form.Item>
               </Form>

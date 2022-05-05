@@ -51,6 +51,27 @@ function Author() {
     // table code start
 const columns = [
     {
+        title: "Delete",
+        key: "delete",
+        render: (recode) => {
+            return (
+                <>
+                    <Popconfirm
+                        title="Are you sure to delete this Book?"
+                        onConfirm={(confirm)}
+                        onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button onClick={() => {
+                            setAuthoeID(recode);
+                        }} type="primary" icon={<DeleteOutlined />}>Delete</Button>
+                    </Popconfirm>
+                </>
+            );
+        },
+    },
+    {
         title: "Name",
         dataIndex: "name",
         key: "name",
@@ -60,12 +81,14 @@ const columns = [
         title: "Description",
         dataIndex: "description",
         key: "description",
+        width: "32%",
     },
 
     {
         title: "Address",
         dataIndex: "address",
         key: "address",
+        width: "5%",
     },
 
     {
@@ -94,22 +117,25 @@ const columns = [
         dataIndex: "cdate",
     },
     {
-        title: "Delete",
-        key: "delete",
+        title: "Facebook",
+        key: "facebook",
+        width: "32%",
         render: (recode) => {
             return (
                 <>
-                    <Popconfirm
-                        title="Are you sure to delete this Book?"
-                        onConfirm={(confirm)}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button onClick={() => {
-                            setAuthoeID(recode);
-                        }} type="primary" icon={<DeleteOutlined />}>Delete</Button>
-                    </Popconfirm>
+                   <a href={recode.facebook}>{recode.facebook}</a>
+                </>
+            );
+        },
+    },
+    {
+        title: "Twitter",
+        key: "twitter",
+        width: "32%",
+        render: (recode) => {
+            return (
+                <>
+                   <a href={recode.twitter}>{recode.twitter}</a>
                 </>
             );
         },

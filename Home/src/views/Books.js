@@ -1,23 +1,22 @@
 import React, { useEffect } from "react";
-import { message, PageHeader } from "antd";
+import { Form, Input, message, PageHeader } from "antd";
 
 import Navbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useState } from "react";
 import Axios from 'axios';
 import { useHistory } from "react-router-dom";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faMessage, faPaperPlane, faUser } from "@fortawesome/free-solid-svg-icons";
 
 
-
-export default function Category(props) {
+export default function Books() {
 
     const history = useHistory();
-    const [category, setCategory] = useState(props.match.params);
     const [header, setHeader] = useState([]);
     const [getBook, setGetBook] = useState([]);
+
+    const [searchKey, setSearchKey] = useState([]);
 
     const [customerEmail, getCustomeremail] = useState();
 
@@ -53,7 +52,7 @@ export default function Category(props) {
     }
 
     const loadBook = () => {
-        Axios.get(`http://localhost:3001/book/view/${category.cat_id}`).then((respons) => {
+        Axios.get("http://localhost:3001/book/ViewAccept/").then((respons) => {
             setGetBook(respons.data);
         })
     }
@@ -63,6 +62,16 @@ export default function Category(props) {
             setHeader(respons.data);
         })
     }
+    const searchBooks = (values) => {
+
+        if (values != "") {
+            Axios.get(`http://localhost:3001/book/search/${values}`).then((respons) => {
+                setGetBook(respons.data);
+            })
+        } else {
+            loadBook()
+        }
+    }
 
     const routes = [
         {
@@ -70,8 +79,8 @@ export default function Category(props) {
             breadcrumbName: 'Home',
         },
         {
-            path: 'Category',
-            breadcrumbName: 'Category',
+            path: 'books',
+            breadcrumbName: 'Books',
         },
     ];
     return (
@@ -102,6 +111,14 @@ export default function Category(props) {
                                 title="Books"
                                 breadcrumb={{ routes }}
                                 style={{ backgroundColor: '#fff', borderTop: '5px solid black' }}
+                                extra={[
+                                    <Form name="payform" >
+                                        <Form.Item name="search">
+                                            <Input onChange={(e) => { searchBooks(e.target.value) }} placeholder="Search Books Here.." />
+
+                                        </Form.Item>
+                                    </Form>,
+                                ]}
                             />
                         </section>
                     </>
@@ -161,12 +178,12 @@ export default function Category(props) {
                                             </div>
                                             <div className="mb-2 text-blueGray-600">
                                                 <h5>
-                                                    <i className="fab fa-facebook"></i>  Facebook : <a href={value.facebook}>{value.facebook}</a>
+                                                <i className="fab fa-facebook"></i>  Facebook : <a href={value.facebook}>{value.facebook}</a>
                                                 </h5>
                                             </div>
                                             <div className="mb-2 text-blueGray-600">
                                                 <h5>
-                                                    <i className="fab fa-twitter"></i> Twitter : <a href={value.twitter}>{value.twitter}</a>
+                                                <i className="fab fa-twitter"></i> Twitter : <a href={value.twitter}>{value.twitter}</a>
                                                 </h5>
                                             </div>
                                         </div>

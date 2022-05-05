@@ -27,7 +27,7 @@ import { useHistory, Redirect } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 // Images
 import face2 from "../assets/images/face-2.jpg";
-import { PlusOutlined, UploadOutlined, DeleteOutlined, EditOutlined, RetweetOutlined, CheckOutlined } from '@ant-design/icons';
+import { PlusOutlined, UploadOutlined, ExclamationOutlined, DeleteOutlined, EditOutlined, RetweetOutlined, CheckOutlined } from '@ant-design/icons';
 import Item from "antd/lib/list/Item";
 
 const { Title } = Typography;
@@ -221,7 +221,6 @@ function Book() {
     },
   };
   const onFinishEdit = (values) => {
-    console.log(bookid);
 
     Axios.put(`http://localhost:3001/book/edit/${bookid}`, values)
       .then((respons) => {
@@ -240,15 +239,17 @@ function Book() {
 
       data.append('file', fileList[0].originFileObj);
       data.append('title', values.title);
-      if(loginEmail == 'admin'){
+      if (loginEmail == 'admin') {
         data.append('author', values.author);
-      }else{
+      } else {
         data.append('author', loginID);
       }
       data.append('description', values.description);
       data.append('price', values.price);
       data.append('pdf', pdfrespons.file.name);
       data.append('category', values.category);
+      data.append('isbn_number', values.isbn_number);
+      data.append('highlight', values.highlight);
 
       Axios.post('http://localhost:3001/book/newbook', data)
         .then((respons) => {
@@ -311,6 +312,17 @@ function Book() {
                         </Select>
                       </Form.Item>
                       <Form.Item label="Description" name="description">
+                        <Input />
+                      </Form.Item>
+                      <Form.Item label="Book ISBN Number" name="isbn_number"
+                        rules={[{ required: true, message: 'Please Enter Book ISBN Number' }]}
+                      >
+                        <ExclamationOutlined />
+                        <Input />
+                      </Form.Item>
+                      <Form.Item label="Book Highlight" name="highlight"
+                        rules={[{ required: true, message: 'Please Add Your Book Highlights' }]}
+                      >
                         <Input />
                       </Form.Item>
                       <Form.Item label="Price" name="price" type="number">
@@ -471,7 +483,7 @@ function Book() {
                     <h1>Author :</h1>
                   </Col>
                   <Col span={12}>
-                    <h1>{val.name} <br />{val.address} <br />{val.phone} <br />{val.email}</h1>
+                    <h1>{val.name} <br />{val.address} <br />{val.phone} <br />{val.email}<br /><a href={val.facebook}>{val.facebook}</a><br /><a href={val.twitter}>{val.twitter}</a></h1>
                   </Col>
                 </Row>
                 {localStorage.getItem('author') == 'admin' ?
@@ -510,26 +522,28 @@ function Book() {
 
                   : <></>}
                 <Row>
-                  <Col span={7}>
-                    <>
+                  {/* {localStorage.getItem('author') != 'admin' ? */}
+                    <> <Col span={7}>
+                      <>
 
-                      <Button onClick={() => {
-                        setBookID(val.book_id);
-                        showModal()
-                        setIsEdit(false)
-                      }} type="primary" icon={<EditOutlined />}>Edit Details</Button>
-                    </>
-                  </Col>
-                  <Col span={12}>
-                    <>
+                        <Button onClick={() => {
+                          setBookID(val.book_id);
+                          showModal()
+                          setIsEdit(false)
+                        }} type="primary" icon={<EditOutlined />}>Edit Details</Button>
+                      </>
+                    </Col>
+                      <Col span={12}>
+                        <>
 
-                      <Button onClick={() => {
-                        setUploadBookID(val.book_id)
-                        showUploadModal()
-                        setIsEdit(false)
-                      }} type="primary" icon={<EditOutlined />}>Edit Image and File</Button>
-                    </>
-                  </Col>
+                          <Button onClick={() => {
+                            setUploadBookID(val.book_id)
+                            showUploadModal()
+                            setIsEdit(false)
+                          }} type="primary" icon={<EditOutlined />}>Edit Image and File</Button>
+                        </>
+                      </Col></>
+                    {/* : <></>} */}
                 </Row>
                 <Row>
                   <Col span={12}>

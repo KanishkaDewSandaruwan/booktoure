@@ -18,7 +18,7 @@ export default function Login() {
         message.error(respons.data.message)
       } else {
         localStorage.setItem('customer', respons.data[0].email)
-        history.push('/landing')
+        history.push('/')
       }
     })
   };

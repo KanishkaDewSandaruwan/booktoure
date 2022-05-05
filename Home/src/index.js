@@ -19,6 +19,8 @@ import Index from "views/Index.js";
 import Category from "views/Category.js";
 import Cart from "views/Cart.js";
 import Downloads from "views/Downloads";
+import Books from "views/Books.js";
+import Payment from "views/Payment";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -32,6 +34,8 @@ ReactDOM.render(
       <Route path="/cart" exact component={Cart} />
       <Route path="/profile" exact component={Profile} />
       <Route path="/" exact component={Landing} />
+      <Route path="/books" exact component={Books} />
+      <Route path="/payment" exact component={Payment} />
       <Route path="/downloads" exact component={Downloads} />
       {/* add redirect for first page */}
       <Redirect from="*" to="/" />

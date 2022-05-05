@@ -35,10 +35,12 @@ function Settings() {
     const [form] = Form.useForm();
     const [form2] = Form.useForm();
     const [form3] = Form.useForm();
+    const [form4] = Form.useForm();
     const [fileList, setFileList] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isModalAboutVisible, setisModalAboutVisible] = useState(false);
     const [isModalServiceVisible, setisModalServiceVisible] = useState(false);
+    const [isModalContactVisible, setisModalContactVisible] = useState(false);
     const [isModalVisibleImageUpload, setIsModalVisibleImageUpload] = useState(false);
 
     const [editerData, setEditerData] = useState([]);
@@ -72,6 +74,11 @@ function Settings() {
     const showAboutModal = () => {
         setisModalAboutVisible(true);
     };
+
+    const showContactModal = () => {
+        setisModalContactVisible(true);
+    };
+
     const showModalService = () => {
         setisModalServiceVisible(true);
     };
@@ -95,6 +102,10 @@ function Settings() {
         setisModalServiceVisible(false);
         form3.resetFields();
     };
+    const ContacthandleCancel = () => {
+        setisModalContactVisible(false);
+        form4.resetFields();
+    };
 
     const handleUpload = ({ fileList }) => {
         setFileList(fileList);
@@ -112,7 +123,7 @@ function Settings() {
             }
             if (info.file.status === "done") {
                 message.success(`${info.file.name} file uploaded successfully`);
-                window.location.href='/settings';
+                window.location.href = '/settings';
             } else if (info.file.status === "error") {
                 message.error(`${info.file.name} file upload failed.`);
             }
@@ -130,7 +141,7 @@ function Settings() {
             }
             if (info.file.status === "done") {
                 message.success(`${info.file.name} file uploaded successfully`);
-                window.location.href='/settings';
+                window.location.href = '/settings';
             } else if (info.file.status === "error") {
                 message.error(`${info.file.name} file upload failed.`);
             }
@@ -148,7 +159,7 @@ function Settings() {
             }
             if (info.file.status === "done") {
                 message.success(`${info.file.name} file uploaded successfully`);
-                window.location.href='/settings';
+                window.location.href = '/settings';
             } else if (info.file.status === "error") {
                 message.error(`${info.file.name} file upload failed.`);
             }
@@ -224,6 +235,26 @@ function Settings() {
 
     };
 
+    const onFinishContact = (values) => {
+
+        const data = {
+            'email': values.email,
+            'facebook': values.facebook,
+            'twitter': values.twitter,
+        }
+
+        Axios.post('http://localhost:3001/settings/contact', data)
+            .then((respons) => {
+                ContacthandleCancel();
+                history.push('/settings');
+                message.success('Contact Changes Success!');
+            }).catch((err) => {
+                console.log(err);
+            })
+
+
+    };
+
 
     return (
         <>
@@ -248,6 +279,22 @@ function Settings() {
                                                 <Row><h>Header Title : {val.title}</h></Row>
                                                 <Row><h>Header Description : {val.description}</h></Row>
                                                 <img src={'http://localhost:3001/settings/' + val.header_image} />
+                                            </>
+                                        ))}
+                                    </Col>
+                                </Row>
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={6}>
+                                        <Button type="primary" icon={<PlusOutlined />} onClick={showContactModal} >Change Company Contact Details</Button>
+                                    </Col>
+                                </Row>
+                                <Row style={{ padding: '10px' }}>
+                                    <Col span={12}>
+                                        {header.map((val, key) => (
+                                            <>
+                                                <Row><h>Email Address : {val.email}</h></Row>
+                                                <Row><h>Facebook : <a href="{val.facebook}">{val.facebook}</a></h></Row>
+                                                <Row><h>Twitter : <a href="{val.twitter}">{val.twitter}</a></h></Row>
                                             </>
                                         ))}
                                     </Col>
@@ -288,7 +335,7 @@ function Settings() {
                                     <Col span={6}>
                                         <Form
                                             name="subheaderForm">
-                                            <Form.Item  name="subheader">
+                                            <Form.Item name="subheader">
                                                 <Upload
                                                     {...subPageHeaderChange}
                                                 >
@@ -312,7 +359,7 @@ function Settings() {
                                     <Col span={6}>
                                         <Form
                                             name="loginimageform">
-                                            <Form.Item  name="logheader">
+                                            <Form.Item name="logheader">
                                                 <Upload
                                                     {...loginImageChange}
                                                 >
@@ -335,7 +382,7 @@ function Settings() {
                                     <Col span={6}>
                                         <Form
                                             name="adminloginForm">
-                                            <Form.Item  name="adminlogin">
+                                            <Form.Item name="adminlogin">
                                                 <Upload
                                                     {...AdminloginImageChange}
                                                 >
@@ -427,6 +474,27 @@ function Settings() {
                                         >
                                             <Button icon={<UploadOutlined />}>Click to Upload</Button>
                                         </Upload>
+                                    </Form.Item>
+                                </Form>
+                            </Modal>
+
+                            <Modal title="Contact Manage" okText="Finish" onOk={form4.submit} visible={isModalContactVisible} onCancel={ContacthandleCancel}>
+                                <Form
+                                    name="ContactForm"
+                                    onFinish={onFinishContact}
+                                    // onFinishFailed={onFinishFailed}
+                                    form={form4} >
+                                    <Form.Item label="Email Address" name="email"
+                                        rules={[{ required: true, message: 'Please Enter Email' }]}>
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item label="Facebook Link" name="facebook"
+                                        rules={[{ required: true, message: 'Please Enter Facebook' }]}>
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item label="Twitter Link" name="twitter"
+                                        rules={[{ required: true, message: 'Please Enter Twitter' }]}>
+                                        <Input />
                                     </Form.Item>
                                 </Form>
                             </Modal>

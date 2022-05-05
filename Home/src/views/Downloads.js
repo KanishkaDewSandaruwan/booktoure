@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
-import { message } from "antd";
+import { Button, message, PageHeader, Row, Statistic } from "antd";
 
 import Navbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { useState } from "react";
 import Axios from 'axios';
 import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBook, faBookReader, faCreditCard, faDownload, faHighlighter, faLink, faMessage, faPaperPlane, faUser } from "@fortawesome/free-solid-svg-icons";
+
 
 export default function Downloads() {
 
@@ -17,39 +20,23 @@ export default function Downloads() {
     const [customerEmail, getCustomeremail] = useState();
 
     useEffect(() => {
+        if (!localStorage.getItem('customer')) {
+            history.push('/auth/login');
+        }
         getCustomeremail(localStorage.getItem('customer'));
         loadData();
     }, [])
 
-    const addtoCart = (book_id) => {
-
-        if (!localStorage.getItem('customer')) {
-            history.push('/auth/login');
-        } else {
-
-            const data = {
-                'book_id': book_id,
-                'customer_email': customerEmail,
-            }
-
-            Axios.post("http://localhost:3001/cart/addtocart", data)
-                .then((respons) => {
-                    message.success('Product Added to Cart!');
-                }).catch((err) => {
-                    console.log(err);
-                })
-
-        }
-    }
 
     const loadData = () => {
         getHeader();
-        // loadBook();
+        loadBook();
     }
 
     const loadBook = () => {
-        Axios.get(`http://localhost:3001/book/view/${category.cat_id}`).then((respons) => {
+        Axios.get(`http://localhost:3001/download/view/${localStorage.getItem('customer')}`).then((respons) => {
             setGetBook(respons.data);
+            console.log(respons.data);
         })
     }
 
@@ -58,6 +45,20 @@ export default function Downloads() {
             setHeader(respons.data);
         })
     }
+    const download = () => {
+
+    }
+
+    const routes = [
+        {
+            path: '/',
+            breadcrumbName: 'Home',
+        },
+        {
+            path: 'downloads',
+            breadcrumbName: 'Downloads',
+        },
+    ];
     return (
         <>
             <Navbar onLoad={loadData} transparent />
@@ -76,8 +77,18 @@ export default function Downloads() {
                                 <span
                                     id="blackOverlay"
                                     className="w-full h-full absolute opacity-50 bg-black"
-                                >Cart</span>
+                                >Downloads</span>
                             </div>
+                        </section>
+                        <section className="relative block h-400-px">
+                            <PageHeader
+                                onBack={() => window.history.back()}
+                                className="site-page-header"
+                                title="Downloads"
+                                breadcrumb={{ routes }}
+                                style={{ backgroundColor: '#fff', marginTop: '1%', padding: '3%' }}
+                            >
+                            </PageHeader>
                         </section>
                     </>
                     )
@@ -97,31 +108,13 @@ export default function Downloads() {
                                                 <button
                                                     className="bg-lightBlue-500 active:bg-lightBlue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                                                     type="primary"
-                                                    onClick={() => { addtoCart(value.book_id) }}
+                                                    onClick={() => { download(value.book_id) }}
                                                 >
-                                                    Add to Cart
+                                                     <FontAwesomeIcon icon={faDownload} size='lg' style={{ paddingRight: '10px' }} /> Download This Book
                                                 </button>
                                             </div>
                                         </div>
                                         <div className="w-full lg:w-4/12 px-4 lg:order-1">
-                                            <div className="flex justify-center py-4 lg:pt-4 pt-8">
-                                                <div className="mr-4 p-3 text-center">
-                                                    <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                                                        22
-                                                    </span>
-                                                    <span className="text-sm text-blueGray-400">
-                                                        Downloads
-                                                    </span>
-                                                </div>
-                                                <div className="mr-4 p-3 text-center">
-                                                    <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                                                        10
-                                                    </span>
-                                                    <span className="text-sm text-blueGray-400">
-                                                        Author Publications
-                                                    </span>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div className="flex flex-wrap justify-center">
@@ -133,12 +126,48 @@ export default function Downloads() {
                                                 Rs.  {value.price}
                                             </div>
                                             <div className="mb-2 text-blueGray-600 mt-10">
-                                                <i className="fas fa-user mr-2 text-lg text-blueGray-400"></i>
-                                                {value.name}
+                                                <h5>
+                                                    <FontAwesomeIcon icon={faUser} size='lg' style={{ paddingRight: '10px' }} /> Author : {value.name}
+                                                </h5>
                                             </div>
                                             <div className="mb-2 text-blueGray-600">
-                                                <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
-                                                {value.description}
+                                                <h5>
+                                                    <FontAwesomeIcon icon={faPaperPlane} size='lg' style={{ paddingRight: '10px' }} />About Author : {value.description}
+                                                </h5>
+                                            </div>
+                                            <div className="mb-2 text-blueGray-600">
+                                                <h5>
+                                                    <FontAwesomeIcon icon={faMessage} size='lg' style={{ paddingRight: '10px' }} />Author Email : {value.email}
+                                                </h5>
+                                            </div>
+                                            <div className="mb-2 text-blueGray-600">
+                                                <h5>
+                                                    <FontAwesomeIcon icon={faBook} size='lg' style={{ paddingRight: '10px' }} />ISBN NUmber : {value.isbn_number}
+                                                </h5>
+                                            </div>
+                                            <div className="mb-2 text-blueGray-600">
+                                                <h5>
+                                                    <i className="fab fa-facebook"></i>  Facebook : <a href={value.facebook}>{value.facebook}</a>
+                                                </h5>
+                                            </div>
+                                            <div className="mb-2 text-blueGray-600">
+                                                <h5>
+                                                    <i className="fab fa-twitter"></i> Twitter : <a href={value.twitter}>{value.twitter}</a>
+                                                </h5>
+                                            </div>
+                                            <div className="mb-2 text-blueGray-600">
+                                                <h5>
+                                                <FontAwesomeIcon icon={faCreditCard} size='lg' style={{ paddingRight: '10px' }} />Payment : Paid
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div className="w-full lg:w-4/12 px-4 lg:order-1">
+
+                                            <div className="mb-2 text-blueGray-600">
+                                                <h5>
+                                                    Book Description
+                                                </h5>
+                                                <h4>{value.book_description}</h4>
                                             </div>
                                         </div>
                                         <div className="w-full lg:w-4/12 px-4 lg:order-1">
@@ -152,7 +181,7 @@ export default function Downloads() {
                                         <div className="flex flex-wrap justify-center">
                                             <div className="w-full lg:w-9/12 px-4">
                                                 <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                                                    {value.book_description}
+                                                    {value.highlight}
                                                 </p>
                                                 {/* <a
                                                     href="#pablo"

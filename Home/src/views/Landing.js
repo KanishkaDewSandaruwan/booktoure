@@ -19,14 +19,45 @@ export default function Landing() {
   const [messages, setMessage] = useState();
   const [fullname, setFullName] = useState();
   const [email, setEmail] = useState();
+  const [getBook, setGetBook] = useState([]);
+  const [customerEmail, getCustomeremail] = useState();
 
   useEffect(() => {
+    getCustomeremail(localStorage.getItem('customer'));
     loadData();
-  })
+  }, [])
 
   const loadData = () => {
     getHeader();
     getCategory();
+    loadBook();
+  }
+
+  const loadBook = () => {
+    Axios.get("http://localhost:3001/book/ViewAccept/").then((respons) => {
+      setGetBook(respons.data);
+    })
+  }
+
+  const addtoCart = (book_id) => {
+
+    if (!localStorage.getItem('customer')) {
+      history.push('/auth/login');
+    } else {
+
+      const data = {
+        'book_id': book_id,
+        'customer_email': customerEmail,
+      }
+
+      Axios.post("http://localhost:3001/cart/addtocart", data)
+        .then((respons) => {
+          message.success('Product Added to Cart!');
+        }).catch((err) => {
+          console.log(err);
+        })
+
+    }
   }
 
   const getHeader = () => {
@@ -117,9 +148,9 @@ export default function Landing() {
 
 
 
-        <section style={{ marginTop: '10px' }} className="pb-10 bg-teal-900 ">
+        <section id="service" style={{ marginTop: '10px' }} className="pb-10 bg-teal-900 ">
           {header.map((val, key) => {
-            const ImageURL = 'http://localhost:3001/settings/' + val.header_image;
+            const ImageURL = 'http://localhost:3001/settings/' + val.service_image;
             return (<>
               <div className="p-5 container mx-auto px-4">
                 <div className="flex flex-wrap items-center mt-32">
@@ -131,9 +162,9 @@ export default function Landing() {
                       Our Service
                     </h3>
                     <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-blueGray-600">
-                     {val.service_description}
+                      {val.service_description}
                     </p>
- 
+
                   </div>
 
                   <div className="w-full md:w-4/12 px-4 mr-auto ml-auto">
@@ -153,11 +184,11 @@ export default function Landing() {
         </section>
 
 
-        <section>
+        <section id="books">
           <div className="flex flex-wrap items-center mt-32" style={{ marginLeft: '12%' }}>
 
             <h3 className="text-3xl mb-2 font-semibold leading-normal">
-              Our Books Category
+              Our Book Categories
             </h3>
 
           </div>
@@ -178,6 +209,55 @@ export default function Landing() {
                     </div>
                   </div>
                 )
+              })}
+            </div>
+
+
+          </div>
+        </section>
+
+
+        <section id="books">
+          <div className="flex flex-wrap items-center mt-32" style={{ marginLeft: '12%' }}>
+
+            <h3 className="text-3xl mb-2 font-semibold leading-normal">
+              Our Latest Books
+            </h3>
+            <a href="/books" style={{ marginLeft: '2%', fontSize: '15px' }}>More Books ...</a>
+
+          </div>
+          <div className="container mx-auto px-4">
+            <div className="flex flex-wrap">
+              {getBook.map((val, i) => {
+                const ImageURL = 'http://localhost:3001/upload/' + val.image;
+                if (i < 6) {
+                  return (
+
+                    <div style={{ cursor: 'pointer' }} className="lg:pt-8 pt-6 w-full md:w-4/12 px-4 text-center">
+                      <div className="relative flex flex-col min-w-0 break-words bg- w-20 mb-8 shadow-lg rounded-lg">
+                        <div className="px-4 py-5 flex-auto">
+                          <div className="text-white text-center inline-flex items-center justify-center  mb-5 shadow-md">
+                            <img alt="Header" style={{ width: '250px', height: '320px' }} src={ImageURL} />
+                          </div>
+                          <div className="">
+                            <div className="inline-flex items-left justify-left text-left"><h6 className="text-xl font-semibold">{val.title}</h6></div>
+                            <div style={{ marginLeft: '8%' }} className="inline-flex items-right justify-right ml-5"><h6 style={{ color: 'red' }} className="text-sm font-semibold">Rs. {val.price}</h6></div>
+                          </div>
+                          <div>
+
+                            <button
+                              className="bg-lightBlue-500 active:bg-lightBlue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
+                              type="primary"
+                              onClick={() => { addtoCart(val.book_id) }}
+                            >
+                              Add to Cart
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
               })}
             </div>
 

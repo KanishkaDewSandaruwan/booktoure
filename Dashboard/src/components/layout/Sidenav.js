@@ -254,6 +254,19 @@ function Sidenav({ color }) {
               <span className="label">Author</span>
             </NavLink>
           </Menu.Item>
+          <Menu.Item key="5">
+            <NavLink to="/payments">
+              <span
+                className="icon"
+                style={{
+                  background: page === "payments" ? color : "",
+                }}
+              >
+                <DollarOutlined />
+              </span>
+              <span className="label">Payments</span>
+            </NavLink>
+          </Menu.Item>
           <Menu.Item className="menu-item-header" key="5">
             Customization Pages
           </Menu.Item>
@@ -270,25 +283,6 @@ function Sidenav({ color }) {
               <span className="label">Settings</span>
             </NavLink>
           </Menu.Item>
-
-          <Menu.Item className="menu-item-header" key="5">
-            Account Pages
-          </Menu.Item>
-          <Menu.Item key="6">
-            <NavLink to="/profile">
-              <span
-                className="icon"
-                style={{
-                  background: page === "profile" ? color : "",
-                }}
-              >
-                <TeamOutlined />
-              </span>
-              <span className="label">Profile</span>
-            </NavLink>
-          </Menu.Item>
-
-          
         </Menu>
         :
 
@@ -356,6 +350,22 @@ function Sidenav({ color }) {
                 <DollarOutlined />
               </span>
               <span className="label">Payments</span>
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item className="menu-item-header" key="5">
+            Account Pages
+          </Menu.Item>
+          <Menu.Item key="6">
+            <NavLink to="/profile">
+              <span
+                className="icon"
+                style={{
+                  background: page === "profile" ? color : "",
+                }}
+              >
+                <TeamOutlined />
+              </span>
+              <span className="label">Profile</span>
             </NavLink>
           </Menu.Item>
         </Menu>
