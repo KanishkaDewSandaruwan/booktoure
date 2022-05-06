@@ -1,161 +1,128 @@
-/*!
-  =========================================================
-  * Muse Ant Design Dashboard - v1.0.0
-  =========================================================
-  * Product Page: https://www.creative-tim.com/product/muse-ant-design-dashboard
-  * Copyright 2021 Creative Tim (https://www.creative-tim.com)
-  * Licensed under MIT (https://github.com/creativetimofficial/muse-ant-design-dashboard/blob/main/LICENSE.md)
-  * Coded by Creative Tim
-  =========================================================
-  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-import { useState } from "react";
-
 import {
-  Row,
-  Col,
-  Card,
-  Button,
-  List,
-  Descriptions,
-  Avatar,
-  Radio,
-  Switch,
-  Upload,
-  message,
+  Avatar, Card, Col, Form, Input, message, Modal, Popconfirm, Radio, Row, Select
 } from "antd";
-
-import {
-  FacebookOutlined,
-  TwitterOutlined,
-  InstagramOutlined,
-  VerticalAlignTopOutlined,
-} from "@ant-design/icons";
-
+import { Option } from "antd/lib/mentions";
+import Axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from "react-router-dom";
 import BgProfile from "../assets/images/bg-profile.jpg";
-import profilavatar from "../assets/images/face-1.jpg";
-import convesionImg from "../assets/images/face-3.jpg";
-import convesionImg2 from "../assets/images/face-4.jpg";
-import convesionImg3 from "../assets/images/face-5.jpeg";
-import convesionImg4 from "../assets/images/face-6.jpeg";
-import convesionImg5 from "../assets/images/face-2.jpg";
-import project1 from "../assets/images/home-decor-1.jpeg";
-import project2 from "../assets/images/home-decor-2.jpeg";
-import project3 from "../assets/images/home-decor-3.jpeg";
 
 function Profile() {
-  const [imageURL, setImageURL] = useState(false);
-  const [, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const [form1] = Form.useForm();
+  const history = useHistory();
+  const [author, setAuthor] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalEmailVisible, setIsModalEmailVisible] = useState(false);
+  const [isModalPasswordVisible, setIsModalPasswordVisible] = useState(false);
 
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result));
-    reader.readAsDataURL(img);
+  useEffect(() => {
+
+    if (localStorage.getItem('author') != 'admin') {
+      getAurthor();
+    } else {
+      history.push('/sign-in');
+    }
+
+  }, [])
+
+  const getAurthor = () => {
+    Axios.get(`http://localhost:3001/author/getauthorid/${localStorage.getItem('author')}`).then((respons) => {
+      setAuthor(respons.data[0]);
+    })
+  }
+
+  const loadBooksByID = () => {
+    Axios.get(`http://localhost:3001/book/viewbyid/${author.author_id}`).then((respons) => {
+      setBooks(respons.data);
+      console.log(respons.data);
+    })
+  }
+
+  const confirm = () => {
+
+    books.map((val) => {
+      Axios.delete(`http://localhost:3001/cart/deletebyBookID/${val.book_id}`);
+      Axios.delete(`http://localhost:3001/download/deletebyBookID/${val.book_id}`);
+      Axios.delete(`http://localhost:3001/book/delete/${val.book_id}`);
+    })
+
+    Axios.delete(`http://localhost:3001/author/delete/own/${author.author_id}`).then(() => {
+      message.success('Your Account Delete Success!');
+      localStorage.clear();
+      window.location.href = '/sign-in';
+    })
+
+  }
+
+  const cancel = () => {
+
+  }
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+  const showChangeEmailModal = () => {
+    setIsModalEmailVisible(true);
+  };
+  const showChangePasswordModal = () => {
+    setIsModalPasswordVisible(true);
   };
 
-  const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG file!");
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error("Image must smaller than 2MB!");
-    }
-    return isJpgOrPng && isLt2M;
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setIsModalEmailVisible(false);
+    setIsModalPasswordVisible(false);
+    form.resetFields();
   };
 
-  const handleChange = (info) => {
-    if (info.file.status === "uploading") {
-      setLoading(false);
-      return;
-    }
-    if (info.file.status === "done") {
-      getBase64(info.file.originFileObj, (imageUrl) => {
-        setLoading(false);
-        setImageURL(false);
-      });
-    }
-  };
+  const onFinish = (values) => {
 
-  const pencil = [
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      key={0}
-    >
-      <path
-        d="M13.5858 3.58579C14.3668 2.80474 15.6332 2.80474 16.4142 3.58579C17.1953 4.36683 17.1953 5.63316 16.4142 6.41421L15.6213 7.20711L12.7929 4.37868L13.5858 3.58579Z"
-        className="fill-gray-7"
-      ></path>
-      <path
-        d="M11.3787 5.79289L3 14.1716V17H5.82842L14.2071 8.62132L11.3787 5.79289Z"
-        className="fill-gray-7"
-      ></path>
-    </svg>,
-  ];
+    Axios.put(`http://localhost:3001/author/edit/details/${localStorage.getItem('author')}`, values)
+      .then(() => {
+        handleCancel();
+        getAurthor();
+        message.success('You Profile Edit is Success!');
+        form.resetFields();
+      }).catch((err) => {
+        console.log(err);
+      })
+  }
 
-  const uploadButton = (
-    <div className="ant-upload-text font-semibold text-dark">
-      {<VerticalAlignTopOutlined style={{ width: 20, color: "#000" }} />}
-      <div>Upload New Project</div>
-    </div>
-  );
+  const onFinishEmailChange = (values) => {
 
-  const data = [
-    {
-      title: "Sophie B.",
-      avatar: convesionImg,
-      description: "Hi! I need more information…",
-    },
-    {
-      title: "Anne Marie",
-      avatar: convesionImg2,
-      description: "Awesome work, can you…",
-    },
-    {
-      title: "Ivan",
-      avatar: convesionImg3,
-      description: "About files I can…",
-    },
-    {
-      title: "Peterson",
-      avatar: convesionImg4,
-      description: "Have a great afternoon…",
-    },
-    {
-      title: "Nick Daniel",
-      avatar: convesionImg5,
-      description: "Hi! I need more information…",
-    },
-  ];
+    Axios.put(`http://localhost:3001/author/edit/email/${localStorage.getItem('author')}`, values)
+      .then(() => {
+        handleCancel();
+        message.success('You Profile Edit is Success!');
+        localStorage.clear();
+        window.location.href = '/sign-in';
+      }).catch((err) => {
+        console.log(err);
+      })
+  }
 
-  const project = [
-    {
-      img: project1,
-      titlesub: "Project #1",
-      title: "Modern",
-      disciption:
-        "As Uber works through a huge amount of internal management turmoil.",
-    },
-    {
-      img: project2,
-      titlesub: "Project #2",
-      title: "Scandinavian",
-      disciption:
-        "Music is something that every person has his or her own specific opinion about.",
-    },
-    {
-      img: project3,
-      titlesub: "Project #3",
-      title: "Minimalist",
-      disciption:
-        "Different people have different taste, and various types of music, Zimbali Resort",
-    },
-  ];
+  const onFinishPasswordChange = (values) => {
+
+    Axios.get(`http://localhost:3001/author/edit/detailsvalidate/${localStorage.getItem('author')}`).then((respons) => {
+
+      if (respons.data[0].password != values.c_password) {
+        message.warning("Password is Not Match");
+      } else {
+
+        Axios.put(`http://localhost:3001/author/edit/password/${localStorage.getItem('author')}`, values)
+          .then(() => {
+            handleCancel();
+            message.success('You Profile Edit is Success!');
+            localStorage.clear();
+            window.location.href = '/sign-in';
+          }).catch((err) => {
+            console.log(err);
+          })
+      }
+    })
+  }
 
   return (
     <>
@@ -171,11 +138,10 @@ function Profile() {
           <Row justify="space-between" align="middle" gutter={[24, 0]}>
             <Col span={24} md={12} className="col-info">
               <Avatar.Group>
-                <Avatar size={74} shape="square" src={profilavatar} />
 
                 <div className="avatar-info">
-                  <h4 className="font-semibold m-0">Sarah Jacob</h4>
-                  <p>CEO / Co-Founder</p>
+                  <h4 className="font-semibold m-0">{author.name}</h4>
+                  <p>{author.description}</p>
                 </div>
               </Avatar.Group>
             </Col>
@@ -189,9 +155,19 @@ function Profile() {
               }}
             >
               <Radio.Group defaultValue="a">
-                <Radio.Button value="a">OVERVIEW</Radio.Button>
-                <Radio.Button value="b">TEAMS</Radio.Button>
-                <Radio.Button value="c">PROJECTS</Radio.Button>
+                <Radio.Button onClick={() => { showModal() }} value="a">Edit Details</Radio.Button>
+                <Radio.Button onClick={() => { showChangeEmailModal() }} value="b">Change Email</Radio.Button>
+                <Radio.Button onClick={() => { showChangePasswordModal() }} value="c">Change Password</Radio.Button>
+                <Popconfirm
+                  title="Do you want to Delete Account?"
+                  onConfirm={(confirm)}
+                  onCancel={cancel}
+                  okText="Delete Book"
+                  cancelText="No"
+                >
+
+                  <Radio.Button onClick={() => { loadBooksByID() }} value="c">Delete Account</Radio.Button>
+                </Popconfirm>
               </Radio.Group>
             </Col>
           </Row>
@@ -199,175 +175,188 @@ function Profile() {
       ></Card>
 
       <Row gutter={[24, 0]}>
-        <Col span={24} md={8} className="mb-24 ">
+        <Col span={24} md={24} className="mb-24 ">
           <Card
             bordered={false}
             className="header-solid h-full"
-            title={<h6 className="font-semibold m-0">Platform Settings</h6>}
+            title={<h6 className="font-semibold m-0">Your Details</h6>}
           >
             <ul className="list settings-list">
               <li>
-                <h6 className="list-header text-sm text-muted">ACCOUNT</h6>
+                <span>Name : </span>
+                <span>{author.name}</span>
               </li>
               <li>
-                <Switch defaultChecked />
-
-                <span>Email me when someone follows me</span>
+                <span>Address : </span>
+                <span>{author.address}</span>
               </li>
               <li>
-                <Switch />
-                <span>Email me when someone answers me</span>
+                <span>Email : </span>
+                <span>{author.email}</span>
               </li>
               <li>
-                <Switch defaultChecked />
-                <span>Email me when someone mentions me</span>
+                <span>Phone Number : </span>
+                <span>{author.phone}</span>
               </li>
               <li>
-                <h6 className="list-header text-sm text-muted m-0">
-                  APPLICATION
-                </h6>
+                <span>Gender : </span>
+                <span>{author.gender}</span>
               </li>
               <li>
-                <Switch defaultChecked />
-                <span>New launches and projects</span>
+                <span>Registerd Date : </span>
+                <span>{author.cdate}</span>
               </li>
               <li>
-                <Switch defaultChecked />
-                <span>Monthly product updates</span>
+                <span>Facebook : </span>
+                <span><a href={author.facebook}>{author.facebook}</a></span>
               </li>
               <li>
-                <Switch defaultChecked />
-                <span>Subscribe to newsletter</span>
+                <span>Twitter : </span>
+                <span><a href={author.twitter}>{author.twitter}</a></span>
+              </li>
+              <li>
+                <span>Description : </span>
+                <span>{author.description}</span>
               </li>
             </ul>
           </Card>
         </Col>
-        <Col span={24} md={8} className="mb-24">
-          <Card
-            bordered={false}
-            title={<h6 className="font-semibold m-0">Profile Information</h6>}
-            className="header-solid h-full card-profile-information"
-            extra={<Button type="link">{pencil}</Button>}
-            bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
-          >
-            <p className="text-dark">
-              {" "}
-              Hi, I’m Alec Thompson, Decisions: If you can’t decide, the answer
-              is no. If two equally difficult paths, choose the one more painful
-              in the short term (pain avoidance is creating an illusion of
-              equality).{" "}
-            </p>
-            <hr className="my-25" />
-            <Descriptions title="Oliver Liam">
-              <Descriptions.Item label="Full Name" span={3}>
-                Sarah Emily Jacob
-              </Descriptions.Item>
-              <Descriptions.Item label="Mobile" span={3}>
-                (44) 123 1234 123
-              </Descriptions.Item>
-              <Descriptions.Item label="Email" span={3}>
-                sarahjacob@mail.com
-              </Descriptions.Item>
-              <Descriptions.Item label="Location" span={3}>
-                USA
-              </Descriptions.Item>
-              <Descriptions.Item label="Social" span={3}>
-                <a href="#pablo" className="mx-5 px-5">
-                  {<TwitterOutlined />}
-                </a>
-                <a href="#pablo" className="mx-5 px-5">
-                  {<FacebookOutlined style={{ color: "#344e86" }} />}
-                </a>
-                <a href="#pablo" className="mx-5 px-5">
-                  {<InstagramOutlined style={{ color: "#e1306c" }} />}
-                </a>
-              </Descriptions.Item>
-            </Descriptions>
-          </Card>
-        </Col>
-        <Col span={24} md={8} className="mb-24">
-          <Card
-            bordered={false}
-            title={<h6 className="font-semibold m-0">Conversations</h6>}
-            className="header-solid h-full"
-            bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
-          >
-            <List
-              itemLayout="horizontal"
-              dataSource={data}
-              split={false}
-              className="conversations-list"
-              renderItem={(item) => (
-                <List.Item actions={[<Button type="link">REPLY</Button>]}>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar shape="square" size={48} src={item.avatar} />
-                    }
-                    title={item.title}
-                    description={item.description}
-                  />
-                </List.Item>
-              )}
-            />
-          </Card>
-        </Col>
       </Row>
-      <Card
-        bordered={false}
-        className="header-solid mb-24"
-        title={
-          <>
-            <h6 className="font-semibold">Projects</h6>
-            <p>Architects design houses</p>
-          </>
-        }
-      >
-        <Row gutter={[24, 24]}>
-          {project.map((p, index) => (
-            <Col span={24} md={12} xl={6} key={index}>
-              <Card
-                bordered={false}
-                className="card-project"
-                cover={<img alt="example" src={p.img} />}
-              >
-                <div className="card-tag">{p.titlesub}</div>
-                <h5>{p.titile}</h5>
-                <p>{p.disciption}</p>
-                <Row gutter={[6, 0]} className="card-footer">
-                  <Col span={12}>
-                    <Button type="button">VIEW PROJECT</Button>
-                  </Col>
-                  <Col span={12} className="text-right">
-                    <Avatar.Group className="avatar-chips">
-                      <Avatar size="small" src={profilavatar} />
-                      <Avatar size="small" src={convesionImg} />
-                      <Avatar size="small" src={convesionImg2} />
-                      <Avatar size="small" src={convesionImg3} />
-                    </Avatar.Group>
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
-          ))}
-          <Col span={24} md={12} xl={6}>
-            <Upload
-              name="avatar"
-              listType="picture-card"
-              className="avatar-uploader projects-uploader"
-              showUploadList={false}
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              beforeUpload={beforeUpload}
-              onChange={handleChange}
+
+
+      <Modal title="Edit Profile" okText="Submit" onOk={form.submit} visible={isModalVisible} onCancel={handleCancel}>
+        <Form
+          name="basic"
+          onFinish={(values) => onFinish(values)}
+          form={form}
+        >
+          <Form.Item name="name">
+            <Input placeholder="Your Full Name" />
+          </Form.Item>
+          <Form.Item name="address">
+            <Input placeholder="Your Address" />
+          </Form.Item>
+          <Form.Item name="description">
+            <Input placeholder="Your Description" />
+          </Form.Item>
+          <Form.Item name="facebook">
+            <Input placeholder="Facebook" />
+          </Form.Item>
+          <Form.Item name="twitter">
+            <Input placeholder="Twitter" />
+          </Form.Item>
+          <Form.Item name="gender">
+            <Select
+              placeholder="Select a Gender Option "
+              allowClear
             >
-              {imageURL ? (
-                <img src={imageURL} alt="avatar" style={{ width: "100%" }} />
-              ) : (
-                uploadButton
-              )}
-            </Upload>
-          </Col>
-        </Row>
-      </Card>
+              <Option value="male">Male</Option>
+              <Option value="female">Female</Option>
+              <Option value="other">Other</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="phone">
+            <Input placeholder="Your Phone Number" />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+
+      <Modal title="Change Email" okText="Submit" onOk={form.submit} visible={isModalEmailVisible} onCancel={handleCancel}>
+        <Form
+          name="basic"
+          onFinish={(values) => onFinishEmailChange(values)}
+          form={form}
+        >
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your password!',
+              },
+            ]}
+            hasFeedback
+          >
+            <Input placeholder="Your New Email Address" />
+          </Form.Item>
+
+          <Form.Item
+            name="confirm_email"
+            placeholder="Confirm Email"
+            dependencies={['email']}
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: 'Please confirm your password!',
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('email') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('The two Emails that you entered do not match!'));
+                },
+              }),
+            ]}
+          >
+            <Input placeholder="Your Confirm Email Address" />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal title="Change Password" okText="Submit" onOk={form1.submit} visible={isModalPasswordVisible} onCancel={handleCancel}>
+        <Form
+          name="basicChangePassword"
+          onFinish={(values) => onFinishPasswordChange(values)}
+          form={form1}
+        >
+          <Form.Item
+            name="c_password"
+            hasFeedback
+          >
+            <Input.Password placeholder="Your Current Password" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your password!',
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password placeholder="Your New Password" />
+          </Form.Item>
+
+          <Form.Item
+            name="confirm"
+            placeholder="Confirm Password"
+            dependencies={['password']}
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: 'Please confirm your password!',
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Your Confirm New Password" />
+          </Form.Item>
+        </Form>
+      </Modal>
+
     </>
   );
 }

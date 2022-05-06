@@ -1,40 +1,15 @@
+import { CheckOutlined, DeleteOutlined, EditOutlined, ExclamationOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import {
-  Row,
-  Col,
-  Card,
-  Upload,
-  message,
-  Image,
-  Button,
-  Avatar,
-  Typography,
-  Popconfirm,
-  Modal,
-  Space,
+  Button, Card, Col, Form,
+  Input, message, Modal, Popconfirm, Row, Select, Space, Upload
 } from "antd";
-
-import { Layout } from 'antd';
-
-import {
-  Form,
-  Input,
-  Pagination,
-  Radio,
-  Select,
-} from 'antd';
 import Axios from 'axios';
-import { useHistory, Redirect } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-// Images
-import face2 from "../assets/images/face-2.jpg";
-import { PlusOutlined, UploadOutlined, ExclamationOutlined, DeleteOutlined, EditOutlined, RetweetOutlined, CheckOutlined } from '@ant-design/icons';
-import Item from "antd/lib/list/Item";
+import { useHistory } from "react-router-dom";
 
-const { Title } = Typography;
 
 function Book() {
 
-  const { Header, Footer, Sider, Content } = Layout;
   const history = useHistory();
 
   const [form] = Form.useForm();
@@ -85,17 +60,13 @@ function Book() {
     setFileList(fileList);
   }
 
-  const handleUploadEdit = ({ fileList }) => {
-    setFileList(fileList);
-  }
-
   useEffect(() => {
     if (!localStorage.getItem('author')) {
       history.push('/sign-in');
     } else {
       setloginEmail(localStorage.getItem('author'))
 
-      if (loginEmail != 'admin') {
+      if (loginEmail !== 'admin') {
         Axios.get(`http://localhost:3001/author/getauthorid/${loginEmail}`).then((respons) => {
           setLoginID(respons.data[0].author_id);
           getBookByID();
@@ -151,10 +122,6 @@ function Book() {
     setIsUploadModalVisible(false);
     form.resetFields();
   }
-
-  const handleOk = () => {
-    setIsUploadModalVisible(false);
-  };
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -235,11 +202,11 @@ function Book() {
   const onFinish = (values) => {
     let data = new FormData();
 
-    if (fileList[0] != null) {
+    if (fileList[0] !== null) {
 
       data.append('file', fileList[0].originFileObj);
       data.append('title', values.title);
-      if (loginEmail == 'admin') {
+      if (loginEmail === 'admin') {
         data.append('author', values.author);
       } else {
         data.append('author', loginID);
@@ -295,8 +262,8 @@ function Book() {
                       >
                         <Input />
                       </Form.Item>
-                      {loginEmail == 'admin' ?
-                        <Form.Item onClick={getAuthor} label="Author" name="author">
+                      {loginEmail === 'admin' ?
+                        <Form.Item rules={[{ required: true, message: 'Please Select Author' }]} onClick={getAuthor} label="Author" name="author">
                           <Select>
                             {author.map((val, key) => {
                               return <><Select.Option value={val.author_id}>{val.name}</Select.Option></>
@@ -304,42 +271,41 @@ function Book() {
                           </Select>
                         </Form.Item>
                         : <></>}
-                      <Form.Item label="Category" name="category">
+                      <Form.Item rules={[{ required: true, message: 'Please select Category' }]} label="Category" name="category">
                         <Select>
                           {category.map((val, key) => {
                             return <><Select.Option value={val.cat_id}>{val.cat_name}</Select.Option></>
                           })}
                         </Select>
                       </Form.Item>
-                      <Form.Item label="Description" name="description">
+                      <Form.Item rules={[{ required: true, message: 'Please Enter Book Description' }]} label="Description" name="description">
                         <Input />
                       </Form.Item>
-                      <Form.Item label="Book ISBN Number" name="isbn_number"
+                      <Form.Item label="ISBN Number" name="isbn_number"
                         rules={[{ required: true, message: 'Please Enter Book ISBN Number' }]}
                       >
-                        <ExclamationOutlined />
                         <Input />
                       </Form.Item>
+                      <a href="tutorial" style={{ padding: '10px' }}><ExclamationOutlined />Learn how to get ISBN </a>
                       <Form.Item label="Book Highlight" name="highlight"
                         rules={[{ required: true, message: 'Please Add Your Book Highlights' }]}
                       >
                         <Input />
                       </Form.Item>
-                      <Form.Item label="Price" name="price" type="number">
+                      <Form.Item label="Price" rules={[{ required: true, message: 'Please Enter Book Price' }]} name="price" type="number">
                         <Input />
                       </Form.Item>
-                      <Form.Item label="Image" name="file">
+                      <Form.Item rules={[{ required: true, message: 'Please Select Image' }]} label="Book Cover Image" name="file">
                         <Upload
                           istType="picture-card"
                           fileList={fileList}
-                          // onPreview={handlePreview}
                           onChange={handleUpload}
                           beforeUpload={() => false}
                         >
                           <Button icon={<UploadOutlined />}>Click to Upload</Button>
                         </Upload>
                       </Form.Item>
-                      <Form.Item label="Book" name="book">
+                      <Form.Item label="PDF File" name="book">
                         <Upload
                           {...props}
                           accept=".pdf"
@@ -354,13 +320,12 @@ function Book() {
                       <Form
                         name="basic"
                         onFinish={onFinishEdit}
-                        // onFinishFailed={onFinishFailed}
                         form={form} >
 
                         <Form.Item label="Edit Book Title" name="title">
                           <Input />
                         </Form.Item>
-                        {loginEmail == 'admin' ?
+                        {loginEmail === 'admin' ?
                           <Form.Item onClick={getAuthor} label="Author" name="author">
                             <Select>
                               {author.map((val, key) => {
@@ -375,6 +340,9 @@ function Book() {
                               return <><Select.Option value={val.cat_id}>{val.cat_name}</Select.Option></>
                             })}
                           </Select>
+                        </Form.Item>
+                        <Form.Item label="Book Highlight" name="highlight">
+                          <Input />
                         </Form.Item>
                         <Form.Item label="Description" name="description">
                           <Input />
@@ -392,7 +360,6 @@ function Book() {
                     <Form
                       name="UploadForm"
                       onFinish={onFinishUpload}
-                      // onFinishFailed={onFinishFailed}
                       form={form} >
                       <Form.Item label="Image" name="image">
                         <Upload
@@ -414,13 +381,6 @@ function Book() {
                 </>
               }
             >
-
-              {/* <Table
-                  columns={columns}
-                  dataSource={book}
-                  pagination={false}
-                  className="ant-border-space"
-                /> */}
             </Card>
           </Col>
         </Row>
@@ -448,10 +408,26 @@ function Book() {
                 </Row>
                 <Row>
                   <Col span={6}>
+                    <h1>Highlight : </h1>
+                  </Col>
+                  <Col span={12}>
+                    <h1>{val.highlight}</h1>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={6}>
                     <h1>Price : </h1>
                   </Col>
                   <Col span={12}>
                     <h1> <span style={{ color: 'red' }}>Rs. {val.price}</span> </h1>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={6}>
+                    <h1>ISBN Number : </h1>
+                  </Col>
+                  <Col span={12}>
+                    <h1>{val.isbn_number}</h1>
                   </Col>
                 </Row>
                 <Row>
@@ -486,7 +462,7 @@ function Book() {
                     <h1>{val.name} <br />{val.address} <br />{val.phone} <br />{val.email}<br /><a href={val.facebook}>{val.facebook}</a><br /><a href={val.twitter}>{val.twitter}</a></h1>
                   </Col>
                 </Row>
-                {localStorage.getItem('author') == 'admin' ?
+                {localStorage.getItem('author') === 'admin' ?
                   <Row>
                     <Col span={7}>
                       <>
@@ -522,7 +498,7 @@ function Book() {
 
                   : <></>}
                 <Row>
-                  {/* {localStorage.getItem('author') != 'admin' ? */}
+                  {localStorage.getItem('author') !== 'admin' ?
                     <> <Col span={7}>
                       <>
 
@@ -543,7 +519,7 @@ function Book() {
                           }} type="primary" icon={<EditOutlined />}>Edit Image and File</Button>
                         </>
                       </Col></>
-                    {/* : <></>} */}
+                    : <></>}
                 </Row>
                 <Row>
                   <Col span={12}>

@@ -1,51 +1,11 @@
-import {
-    Row,
-    Col,
-    Card,
-    Table,
-    Upload,
-    message,
-    Image,
-    Button,
-    Avatar,
-    Typography,
-    Popconfirm,
-    Modal,
-    Space,
-} from "antd";
-import {
-    Form,
-    Input,
-    Radio,
-    Select,
-} from 'antd';
-import Axios from 'axios';
-import { Link, useHistory } from "react-router-dom";
-import React, { useEffect, useState } from 'react';
 // Images
-import face2 from "../assets/images/face-2.jpg";
-import { PlusOutlined, UploadOutlined, DeleteOutlined, EditOutlined, FileImageOutlined } from '@ant-design/icons';
-import ClearableLabeledInput from "antd/lib/input/ClearableLabeledInput";
-
-const { Title } = Typography;
-
-const formProps = {
-    name: "file",
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    headers: {
-        authorization: "authorization-text",
-    },
-    onChange(info) {
-        if (info.file.status !== "uploading") {
-            console.log(info.file, info.fileList);
-        }
-        if (info.file.status === "done") {
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === "error") {
-            message.error(`${info.file.name} file upload failed.`);
-        }
-    },
-};
+import { DeleteOutlined, EditOutlined, FileImageOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+    Button, Card, Col, Form, Image, Input, message, Modal, Popconfirm, Row, Space, Table, Upload
+} from "antd";
+import Axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from "react-router-dom";
 
 function Category() {
 
@@ -57,13 +17,9 @@ function Category() {
     const [category, setCategory] = useState([]);
     const [isedit, setIsEdit] = useState(true);
 
-    const [editerData, setEditerData] = useState([]);
     const [catid, setCategoryID] = useState();
-
     const history = useHistory();
-
     const [cat_id, setCatID] = useState();
-    const [image, setImage] = useState();
 
     // table code start
     const columns = [
@@ -162,7 +118,7 @@ function Category() {
     })
 
     const getCategory = () => {
-        Axios.get('http://localhost:3001/category/view').then((respons) => {
+        Axios.get('http://localhost:3001/category/viewAdmin').then((respons) => {
             setCategory(respons.data);
         })
     }
@@ -174,10 +130,6 @@ function Category() {
     const showModalImage = () => {
         getCategory();
         setIsModalVisibleImageUpload(true);
-    };
-
-    const handleOk = () => {
-        setIsModalVisible(false);
     };
 
     const handleCancel = () => {

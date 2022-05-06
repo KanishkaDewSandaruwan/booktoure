@@ -1,153 +1,16 @@
-import {
-    Row,
-    Col,
-    Card,
-    Table,
-    Upload,
-    message,
-    Image,
-    Button,
-    Avatar,
-    Typography,
-    Popconfirm,
-    Modal,
-  } from "antd";
-  import {
-    Form,
-    Input,
-    Radio,
-    Select,
-  } from 'antd';
-
-import React, { useEffect, useState } from 'react';
-// Images
-import { PlusOutlined, UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Divider, message, Popconfirm, Row, Space } from "antd";
 import Axios from 'axios';
-
-const { Title } = Typography;
-
-const formProps = {
-    name: "file",
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    headers: {
-        authorization: "authorization-text",
-    },
-    onChange(info) {
-        if (info.file.status !== "uploading") {
-            console.log(info.file, info.fileList);
-        }
-        if (info.file.status === "done") {
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === "error") {
-            message.error(`${info.file.name} file upload failed.`);
-        }
-    },
-};
-
-
+import React, { useEffect, useState } from 'react';
 
 function Author() {
-
-    // table code start
-const columns = [
-    {
-        title: "Delete",
-        key: "delete",
-        render: (recode) => {
-            return (
-                <>
-                    <Popconfirm
-                        title="Are you sure to delete this Book?"
-                        onConfirm={(confirm)}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button onClick={() => {
-                            setAuthoeID(recode);
-                        }} type="primary" icon={<DeleteOutlined />}>Delete</Button>
-                    </Popconfirm>
-                </>
-            );
-        },
-    },
-    {
-        title: "Name",
-        dataIndex: "name",
-        key: "name",
-        width: "32%",
-    },
-    {
-        title: "Description",
-        dataIndex: "description",
-        key: "description",
-        width: "32%",
-    },
-
-    {
-        title: "Address",
-        dataIndex: "address",
-        key: "address",
-        width: "5%",
-    },
-
-    {
-        title: "Phone Number",
-        key: "phone",
-        dataIndex: "phone",
-    },
-    {
-        title: "Gender",
-        key: "gender",
-        dataIndex: "gender",
-    },
-    {
-        title: "Email",
-        key: "email",
-        dataIndex: "email",
-    },
-    {
-        title: "Accept",
-        key: "accept",
-        dataIndex: "accept",
-    },
-    {
-        title: "Reg. Date",
-        key: "cdate",
-        dataIndex: "cdate",
-    },
-    {
-        title: "Facebook",
-        key: "facebook",
-        width: "32%",
-        render: (recode) => {
-            return (
-                <>
-                   <a href={recode.facebook}>{recode.facebook}</a>
-                </>
-            );
-        },
-    },
-    {
-        title: "Twitter",
-        key: "twitter",
-        width: "32%",
-        render: (recode) => {
-            return (
-                <>
-                   <a href={recode.twitter}>{recode.twitter}</a>
-                </>
-            );
-        },
-    },
-];
 
     const [data, setData] = useState([]);
     const [author_id, setAuthoeID] = useState();
 
-    const confirm = (recode) => {
-        deleteAuthor(author_id);
-        deleteBooks(author_id);
+    const confirm = () => {
+        deleteAuthor();
+        deleteBooks();
     }
 
     const cancel = (e) => {
@@ -158,20 +21,17 @@ const columns = [
         loadCustomer();
     })
 
-    const deleteAuthor = (recode) => {
-        const author_id = recode.author_id;
+    const deleteAuthor = () => {
+
         Axios.delete(`http://localhost:3001/author/delete/${author_id}`).then((res) => {
             message.success('Author Delete Success!');
         })
     }
 
-    const deleteBooks = (recode) => {
-        const author_id = recode.author_id;
+    const deleteBooks = () => {
         Axios.delete(`http://localhost:3001/author/delete/book/${author_id}`).then((res) => {
         })
     }
-
-    
 
     const loadCustomer = () => {
         Axios.get('http://localhost:3001/author/view').then((respons) => {
@@ -189,18 +49,142 @@ const columns = [
                             className="criclebox tablespace mb-24"
                             title="Author Details"
                         >
-
-                            <div className="table-responsive">
-                                <Table
-                                    columns={columns}
-                                    dataSource={data}
-                                    pagination={false}
-                                    className="ant-border-space"
-                                />
-                            </div>
                         </Card>
                     </Col>
                 </Row>
+                {data.map((val, key) => {
+                    let name = [];
+                    Axios.get(`http://localhost:3001/statistics/getPayment/${val.author_id}`).then((res) => {
+                        name.push(res.data);
+                    });
+                    name.forEach((val, i) => {
+                        console.log(val);
+                    })
+                    return (
+                        <Row style={{ padding: '20px', border: '2px solid gray', marginTop: '1%', backgroundColor: 'white', borderRadius: '10px' }}>
+                            <Col span={14}>
+                                <Space direction="vertical" size="small" style={{ display: 'flex' }}>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Name :</h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1> {val.name}</h1>
+                                        </Col>
+                                    </Row>
+
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Email : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1>{val.sum}</h1>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Address : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1>{val.address}</h1>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Phone Number : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1>{val.phone}</h1>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Description : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1> {val.description}</h1>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Gender : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1> {val.gender}</h1>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Accept : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1>{val.accept}</h1>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Facebook : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1><a href={val.facebook}>{val.facebook}</a></h1>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Twitter : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1><a href={val.twitter}>{val.twitter}</a></h1>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Accept : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1>{val.accept}</h1>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Date : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            <h1>{val.cdate}</h1>
+                                        </Col>
+                                    </Row>
+                                    <Divider />
+                                    <Row>
+                                        <Col span={6}>
+                                            <h1>Number of Books Published : </h1>
+                                        </Col>
+                                        <Col span={12}>
+                                            {name.count}
+                                        </Col>
+                                    </Row>
+
+                                    <Row>
+                                        <Col span={12}>
+                                            <>
+                                                <Popconfirm
+                                                    title="Are you sure to delete this Book?"
+                                                    onConfirm={(confirm)}
+                                                    onCancel={cancel}
+                                                    okText="Yes"
+                                                    cancelText="No"
+                                                >
+                                                    <Button onClick={() => {
+                                                        setAuthoeID(val.author_id);
+                                                    }} type="primary" icon={<DeleteOutlined />}>Delete</Button>
+                                                </Popconfirm>
+                                            </>
+                                        </Col>
+                                    </Row>
+                                </Space>
+                            </Col>
+                        </Row>
+                    )
+                })}
             </div>
         </>
     );

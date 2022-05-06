@@ -19,6 +19,7 @@ export default function Cart() {
     const [getBook, setGetBook] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [paymentID, setPaymentID] = useState([]);
 
     const [customerEmail, getCustomeremail] = useState();
 
@@ -43,29 +44,32 @@ export default function Cart() {
         }
 
         if (bookIDS) {
-            let SringBookIDS = bookIDS.toString();
+
             const paymentdata = {
-                'book_id': SringBookIDS,
                 'customer_email': customerEmail,
                 'total': totalPrice.total,
             }
 
-            getBook.map((val, i) => {
-
-                const data = {
-                    'book_id': val.book_id,
-                    'customer_email': customerEmail,
-                }
-
-                Axios.post("http://localhost:3001/payment/download", data).then((respons) => {
-                })
-            })
-
             Axios.post("http://localhost:3001/payment/pay", paymentdata).then((respons) => {
+                console.log(respons.data.insertId);
+                getBook.map((val, i) => {
+
+                    const data = {
+                        'book_id': val.book_id,
+                        'customer_email': customerEmail,
+                        'payment_id': respons.data.insertId,
+                        'author_id': val.author_id,
+                    }
+                    
+                    Axios.post("http://localhost:3001/payment/download", data).then((respons) => {
+                    })
+                })
                 message.success("Payment is Success! Now You can Download Your Books..");
             })
+
+
             Axios.delete(`http://localhost:3001/cart/delete/all/${localStorage.getItem('customer')}`).then((respons) => {
-                
+
             });
             handleCancel();
             history.push('/downloads')

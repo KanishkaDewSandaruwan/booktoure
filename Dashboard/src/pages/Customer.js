@@ -1,55 +1,11 @@
+import { DeleteOutlined } from '@ant-design/icons';
 import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Upload,
-  message,
-  Image,
-  Button,
-  Avatar,
-  Typography,
-  Popconfirm,
-  Modal,
-} from "antd";
-import {
-  Form,
-  Input,
-  Radio,
-  Select,
-} from 'antd';
-  
-  import React, { useEffect, useState } from 'react';
-  // Images
-  import face2 from "../assets/images/face-2.jpg";
-  import { PlusOutlined, UploadOutlined, DeleteOutlined } from '@ant-design/icons';
-  import Axios from 'axios';
-
-  const { Title } = Typography;
-  
-  const formProps = {
-    name: "file",
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    headers: {
-      authorization: "authorization-text",
-    },
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
-  
-
+  Button, Card, Col, message, Popconfirm, Row, Table} from "antd";
+import Axios from 'axios';
+import React, { useEffect, useState } from 'react';
   
   function Customer() {
 
-    // table code start
   const columns = [
     {
       title: "Name",
@@ -104,10 +60,10 @@ import {
     const [data, setData] = useState([]);
     const [customer_id, setCustomerID] = useState();
 
-    const confirm = (recode) => {
+    const confirm = () => {
       deleteCustomer(customer_id)
     }
-    const cancel = (e) => {
+    const cancel = () => {
 
     }
     
