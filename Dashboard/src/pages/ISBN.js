@@ -1,26 +1,10 @@
-import React, { useState } from "react";
-import { useHistory, Link } from 'react-router-dom'
 import {
-  Layout,
-  Select,
   Button,
-  message,
-  Card,
-  Form,
-  Input,
-  Checkbox,
+  Card, Layout
 } from "antd";
-
-import Axios from 'axios';
+import React from "react";
 
 const { Footer, Content } = Layout;
-
-
-const { Option } = Select;
-
-function handleChange(value) {
-  console.log(`selected ${value}`);
-}
 
 function ISBN() {
 
@@ -35,8 +19,9 @@ function ISBN() {
             title={<h5>Welcome! Book Toure Tutorial point</h5>}
             bordered="false"
           >
-              <Button onClick={() => window.history.back()}>Back</Button>
-           
+            <Button onClick={() => window.history.back()}>Back</Button>
+            <a href="http://localhost:3001/pdf/6271fe69774dc.pdf">download</a>
+
 
           </Card>
         </Content>

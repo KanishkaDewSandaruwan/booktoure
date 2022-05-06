@@ -1,15 +1,13 @@
-import React from "react";
-
-import Navbar from "components/Navbars/IndexNavbar";
-import Footer from "components/Footers/Footer.js";
-import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
-import Axios from 'axios';
-import { Button, Col, Form, Input, message, Modal, Popconfirm, Row, Select } from "antd";
-import { CheckOutlined } from '@ant-design/icons';
-import { Option } from "antd/lib/mentions";
-import { faDeleteLeft, faEdit, faFileEdit, faMessage, faUserEdit } from "@fortawesome/free-solid-svg-icons";
+import { faDeleteLeft, faEdit, faFileEdit, faUserEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Form, Input, message, Modal, Popconfirm, Select } from "antd";
+import { Option } from "antd/lib/mentions";
+import Axios from 'axios';
+import Footer from "components/Footers/Footer.js";
+import Navbar from "components/Navbars/IndexNavbar";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+
 
 export default function Profile() {
   const [form] = Form.useForm();
@@ -30,14 +28,14 @@ export default function Profile() {
   }, [])
 
   const confirm = () => {
-    Axios.delete(`http://localhost:3001/customer/delete/own/${localStorage.getItem('customer')}`).then((res) => {
+    Axios.delete(`http://localhost:3001/customer/delete/own/${localStorage.getItem('customer')}`).then(() => {
       message.success('Your Account Delete Success!');
       history.push('/auth/login');
     })
    
   }
 
-  const cancel = (e) => {
+  const cancel = () => {
    
   }
 
@@ -58,9 +56,6 @@ export default function Profile() {
     form.resetFields();
   };
 
-  const deletCustomer = () => {
-
-  }
 
   const loadCustomer = () => {
     Axios.get(`http://localhost:3001/customer/viewbyEmail/${localStorage.getItem('customer')}`).then((respons) => {
@@ -77,7 +72,7 @@ export default function Profile() {
   const onFinish = (values) => {
 
     Axios.put(`http://localhost:3001/customer/edit/details/${localStorage.getItem('customer')}`, values)
-      .then((respons) => {
+      .then(() => {
         handleCancel();
         loadCustomer();
         message.success('You Profile Edit is Success!');
@@ -90,7 +85,7 @@ export default function Profile() {
   const onFinishEmailChange = (values) => {
 
     Axios.put(`http://localhost:3001/customer/edit/email/${localStorage.getItem('customer')}`, values)
-      .then((respons) => {
+      .then(() => {
         handleCancel();
         message.success('You Profile Edit is Success!');
         history.push('/auth/login');
@@ -108,7 +103,7 @@ export default function Profile() {
       } else {
 
         Axios.put(`http://localhost:3001/customer/edit/password/${localStorage.getItem('customer')}`, values)
-          .then((respons) => {
+          .then(() => {
             handleCancel();
             message.success('You Profile Edit is Success!');
             history.push('/auth/login');
@@ -124,7 +119,7 @@ export default function Profile() {
       <Navbar transparent />
       <main className="profile-page">
         <section className="relative block h-500-px">
-          {header.map((val, key) => {
+          {header.map((val) => {
 
             const ImageURL = 'http://localhost:3001/settings/' + val.second_header_image;
             return (<>

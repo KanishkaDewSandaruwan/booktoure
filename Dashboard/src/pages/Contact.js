@@ -4,33 +4,29 @@ import {
 import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
   
-  function Customer() {
+  function Contact() {
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      width: "32%",
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
-  
-    {
-      title: "Phone Number",
-      key: "phone",
-      dataIndex: "phone",
-    },
-    {
       title: "Email",
-      key: "email",
       dataIndex: "email",
+      key: "email",
+      width: "20%",
     },
     {
-      title: "Reg. Date",
+        title: "Full Name",
+        dataIndex: "fullname",
+        key: "fullname",
+    },
+    
+    {
+        title: "Message",
+        key: "message",
+        dataIndex: "message",
+        width: "32%",
+    },
+    {
+      title: "Date",
       key: "cdate",
       dataIndex: "cdate",
     },
@@ -48,7 +44,7 @@ import React, { useEffect, useState } from 'react';
               cancelText="No"
             >
               <Button onClick={() => {
-                setCustomerID(recode);
+                setEmail(recode);
               }} type="primary" icon={<DeleteOutlined />}>Delete</Button>
             </Popconfirm>
           </>
@@ -58,28 +54,29 @@ import React, { useEffect, useState } from 'react';
   ];
 
     const [data, setData] = useState([]);
-    const [customer_id, setCustomerID] = useState();
+    const [email, setEmail] = useState();
 
     const confirm = () => {
-      deleteCustomer(customer_id)
+      deleteContact(email)
     }
     const cancel = () => {
-
+        setEmail("")
     }
     
     useEffect(() => {
-      loadCustomer();
+        loadContact();
     })
 
-    const deleteCustomer = (recode) => {
+    const deleteContact = (recode) => {
       const email = recode.email;
-      Axios.delete(`http://localhost:3001/customer/delete/${email}`).then((res) => {
+      console.log(email)
+      Axios.delete(`http://localhost:3001/contact/delete/${email}`).then((res) => {
         message.success('Customer Delete Success!');
       })
     }
 
-    const loadCustomer = () => {
-      Axios.get('http://localhost:3001/customer/view').then((respons) => {
+    const loadContact = () => {
+      Axios.get('http://localhost:3001/contact/view').then((respons) => {
         setData(respons.data)
       })
     }
@@ -92,7 +89,7 @@ import React, { useEffect, useState } from 'react';
               <Card
                 bordered={false}
                 className="criclebox tablespace mb-24"
-                title="Customer Details"
+                title="Messages"
                 >
 
                 <div className="table-responsive">
@@ -111,5 +108,5 @@ import React, { useEffect, useState } from 'react';
     );
   }
   
-  export default Customer;
+  export default Contact;
   

@@ -85,7 +85,7 @@ function Payments() {
             </div>
           </Col>
         </Row>
-        {data.map((val, key) => {
+        {data.map((val) => {
           return (
             <Row style={{ padding: '20px', border: '2px solid gray', marginTop: '1%', backgroundColor: 'white', borderRadius: '10px' }}>
               <Col span={14}>

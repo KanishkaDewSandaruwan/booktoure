@@ -1,11 +1,10 @@
 /*eslint-disable*/
-import React from "react";
+import Axios from 'axios';
+import Footer from "components/Footers/Footer.js";
+import IndexNavbar from "components/Navbars/IndexNavbar.js";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import IndexNavbar from "components/Navbars/IndexNavbar.js";
-import Footer from "components/Footers/Footer.js";
-import { useEffect, useState } from "react";
-import Axios from 'axios';
 
 export default function Index() {
 
@@ -25,7 +24,7 @@ export default function Index() {
     <>
       <IndexNavbar fixed />
       <section className="header relative pt-16 items-center flex h-screen max-h-860-px">
-        {header.map((val, key) => {
+        {header.map((val) => {
           const ImageURL = 'http://localhost:3001/settings/'+ val.header_image;
           return (<>
             <div className="container mx-auto items-center flex flex-wrap">

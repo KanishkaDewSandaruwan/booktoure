@@ -1,6 +1,6 @@
 // import { useState } from "react";
 import {
-  BookOutlined, BorderInnerOutlined, DollarOutlined, DownloadOutlined, SettingOutlined, TeamOutlined, UserAddOutlined, UserOutlined
+  BookOutlined, ContactsOutlined, BorderInnerOutlined, DollarOutlined, DownloadOutlined, SettingOutlined, TeamOutlined, UserAddOutlined, UserOutlined
 } from '@ant-design/icons';
 import { Menu } from "antd";
 import { useEffect, useState } from "react";
@@ -119,6 +119,19 @@ function Sidenav({ color }) {
                 <DollarOutlined />
               </span>
               <span className="label">Payments</span>
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="5">
+            <NavLink to="/contact">
+              <span
+                className="icon"
+                style={{
+                  background: page === "contact" ? color : "",
+                }}
+              >
+                <ContactsOutlined />
+              </span>
+              <span className="label">Contact</span>
             </NavLink>
           </Menu.Item>
           <Menu.Item className="menu-item-header" key="5">

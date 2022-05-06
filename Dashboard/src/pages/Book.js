@@ -97,7 +97,7 @@ function Book() {
   }
 
   const getCategory = () => {
-    Axios.get('http://localhost:3001/category/view').then((respons) => {
+    Axios.get('http://localhost:3001/category/viewAdmin').then((respons) => {
       setCategory(respons.data);
     })
   }
@@ -443,10 +443,20 @@ function Book() {
                     <h1>Book File : </h1>
                   </Col>
                   <Col span={12}>
-                    <h1> {val.pdf_file}</h1>
+                    <h1><a href={`http://localhost:3001/pdf/${val.pdf_file}`}>{val.pdf_file}</a></h1>
                   </Col>
                 </Row>
-                <Row>
+                <Row style={{marginTop: '5%'}}>
+                  <Col span={6}>
+                    <h1>Book Preview : </h1>
+                  </Col>
+                  <Col span={12}>
+                    <object data={`http://localhost:3001/pdf/${val.pdf_file}`} type="application/pdf" width="100%" height="100%">
+                      <p>Alternative text - include a link <a href={`http://localhost:3001/pdf/${val.pdf_file}`}>to the PDF!</a></p>
+                    </object>
+                  </Col>
+                </Row>
+                <Row style={{marginTop: '5%'}}>
                   <Col span={6}>
                     <h1>Category : </h1>
                   </Col>

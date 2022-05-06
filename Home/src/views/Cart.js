@@ -1,15 +1,13 @@
-import React, { useEffect } from "react";
-import { message, Button, Row, Statistic, Form, Modal, Upload, Input, Col, Select } from "antd";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartPlus, faCartShopping, faClose, faCreditCard, faDownload } from '@fortawesome/free-solid-svg-icons'
-
-import Navbar from "components/Navbars/IndexNavbar.js";
-import Footer from "components/Footers/Footer.js";
-import { useState } from "react";
-import Axios from 'axios';
-import { useHistory } from "react-router-dom";
-import { PageHeader } from 'antd';
+import { faCartShopping, faClose, faCreditCard, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Col, Form, Input, message, Modal, PageHeader, Row, Select, Statistic } from "antd";
 import { Option } from "antd/lib/mentions";
+import Axios from 'axios';
+import Footer from "components/Footers/Footer.js";
+import Navbar from "components/Navbars/IndexNavbar.js";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+
 
 export default function Cart() {
 
@@ -19,7 +17,6 @@ export default function Cart() {
     const [getBook, setGetBook] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [paymentID, setPaymentID] = useState([]);
 
     const [customerEmail, getCustomeremail] = useState();
 

@@ -16,7 +16,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Setting";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import Tables from "./pages/Tables";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -31,12 +31,12 @@ function App() {
           <Route exact path="/book" component={Book} />
           <Route exact path="/authorIncome" component={AuthorIncome} />
           <Route exact path="/payments" component={Payments} />
-          <Route exact path="/tables" component={Tables} />
           <Route exact path="/category" component={Category} />
           <Route exact path="/author" component={Author} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/income" component={Income} />
+          <Route exact path="/contact" component={Contact} />
           <Redirect from="*" to="/dashboard" />
         </Main>
       </Switch>

@@ -1,13 +1,12 @@
-import React, { useEffect } from "react";
-import { Form, Input, message, PageHeader } from "antd";
-
-import Navbar from "components/Navbars/IndexNavbar.js";
-import Footer from "components/Footers/Footer.js";
-import { useState } from "react";
-import Axios from 'axios';
-import { useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faMessage, faPaperPlane, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Form, Input, message, PageHeader } from "antd";
+import Axios from 'axios';
+import Footer from "components/Footers/Footer.js";
+import Navbar from "components/Navbars/IndexNavbar.js";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+
 
 
 export default function Books() {
@@ -178,12 +177,12 @@ export default function Books() {
                                             </div>
                                             <div className="mb-2 text-blueGray-600">
                                                 <h5>
-                                                <i className="fab fa-facebook"></i>  Facebook : <a href={value.facebook}>{value.facebook}</a>
+                                                    <i className="fab fa-facebook"></i>  Facebook : <a href={value.facebook}>{value.facebook}</a>
                                                 </h5>
                                             </div>
                                             <div className="mb-2 text-blueGray-600">
                                                 <h5>
-                                                <i className="fab fa-twitter"></i> Twitter : <a href={value.twitter}>{value.twitter}</a>
+                                                    <i className="fab fa-twitter"></i> Twitter : <a href={value.twitter}>{value.twitter}</a>
                                                 </h5>
                                             </div>
                                         </div>

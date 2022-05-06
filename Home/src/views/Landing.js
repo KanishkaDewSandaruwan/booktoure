@@ -1,14 +1,12 @@
-import React from "react";
-
-// components
-
-import Navbar from "components/Navbars/IndexNavbar";
-import Footer from "components/Footers/Footer.js";
-import { useEffect, useState } from 'react';
-
+import { Divider, message, Typography } from "antd";
 import Axios from 'axios';
+import Footer from "components/Footers/Footer.js";
+// components
+import Navbar from "components/Navbars/IndexNavbar";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { message, Divider, Typography } from "antd";
+
+
 
 export default function Landing() {
   const history = useHistory();
@@ -51,7 +49,7 @@ export default function Landing() {
       }
 
       Axios.post("http://localhost:3001/cart/addtocart", data)
-        .then((respons) => {
+        .then(() => {
           message.success('Product Added to Cart!');
         }).catch((err) => {
           console.log(err);
@@ -72,7 +70,7 @@ export default function Landing() {
     })
   }
 
-  const sendMessage = (e) => {
+  const sendMessage = () => {
     const data = {
       'email': email,
       'fullname': fullname,
@@ -80,7 +78,7 @@ export default function Landing() {
     }
 
     Axios.post("http://localhost:3001/contact/create", data)
-      .then((respons) => {
+      .then(() => {
         message.success('Your Message sent Success!');
         window.location.href = '/';
       }).catch((err) => {
@@ -92,7 +90,7 @@ export default function Landing() {
     <>
       <Navbar transparent />
       <main onLoad={loadData}>
-        {header.map((val, key) => {
+        {header.map((val) => {
           const ImageURL = 'http://localhost:3001/settings/' + val.header_image;
           return (<>
             <div className="relative pt-16 pb-32 flex content-center items-center justify-center min-h-screen-75">
@@ -149,7 +147,7 @@ export default function Landing() {
 
 
         <section id="service" style={{ marginTop: '10px' }} className="pb-10 bg-teal-900 ">
-          {header.map((val, key) => {
+          {header.map((val) => {
             const ImageURL = 'http://localhost:3001/settings/' + val.service_image;
             return (<>
               <div className="p-5 container mx-auto px-4">
@@ -194,7 +192,7 @@ export default function Landing() {
           </div>
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap">
-              {category.map((val, i) => {
+              {category.map((val) => {
                 const ImageURL = 'http://localhost:3001/upload/category/' + val.cat_image;
                 return (
 
@@ -267,7 +265,7 @@ export default function Landing() {
 
 
         <section id="about" className="relative py-20 pb-10">
-          {header.map((val, key) => {
+          {header.map((val) => {
             const AboutImageURL = 'http://localhost:3001/settings/' + val.about_image;
             return (<>
               <div className="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20 h-20"

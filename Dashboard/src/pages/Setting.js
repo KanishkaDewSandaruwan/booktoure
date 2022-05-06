@@ -1,34 +1,11 @@
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import {
-    Row,
-    Col,
-    Card,
-    Table,
-    Upload,
-    message,
-    Image,
-    Button,
-    Avatar,
-    Typography,
-    Popconfirm,
-    Modal,
-    Space,
+    Button, Card, Col, Form,
+    Input, message, Modal, Row, Space, Upload
 } from "antd";
-import {
-    Form,
-    Input,
-    Radio,
-    Select,
-} from 'antd';
 import Axios from 'axios';
-import { Link, useHistory } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-// Images
-import face2 from "../assets/images/face-2.jpg";
-import { PlusOutlined, UploadOutlined, DeleteOutlined, EditOutlined, FileImageOutlined } from '@ant-design/icons';
-import ClearableLabeledInput from "antd/lib/input/ClearableLabeledInput";
-
-const { Title } = Typography;
-
+import { useHistory } from "react-router-dom";
 
 function Settings() {
 
@@ -43,8 +20,6 @@ function Settings() {
     const [isModalContactVisible, setisModalContactVisible] = useState(false);
     const [isModalVisibleImageUpload, setIsModalVisibleImageUpload] = useState(false);
 
-    const [editerData, setEditerData] = useState([]);
-    const [catid, setCategoryID] = useState();
     const [header, setHeader] = useState([]);
 
     const history = useHistory();
@@ -59,13 +34,6 @@ function Settings() {
         })
     }
 
-    // const confirm = () => {
-
-    // }
-
-    // const cancel = (e) => {
-    //     history.push('/settings');
-    // }
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -81,13 +49,6 @@ function Settings() {
 
     const showModalService = () => {
         setisModalServiceVisible(true);
-    };
-    const showModalImage = () => {
-        setIsModalVisibleImageUpload(true);
-    };
-
-    const handleOk = () => {
-        setIsModalVisible(false);
     };
 
     const handleCancel = () => {

@@ -78,7 +78,7 @@ function Author() {
                                             <h1>Email : </h1>
                                         </Col>
                                         <Col span={12}>
-                                            <h1>{val.sum}</h1>
+                                            <h1>{val.email}</h1>
                                         </Col>
                                     </Row>
                                     <Row>
@@ -163,7 +163,7 @@ function Author() {
                                         </Col>
                                     </Row>
 
-                                    <Row>
+                                    {/* <Row>
                                         <Col span={12}>
                                             <>
                                                 <Popconfirm
@@ -179,7 +179,7 @@ function Author() {
                                                 </Popconfirm>
                                             </>
                                         </Col>
-                                    </Row>
+                                    </Row> */}
                                 </Space>
                             </Col>
                         </Row>

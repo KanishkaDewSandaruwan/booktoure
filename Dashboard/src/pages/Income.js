@@ -11,20 +11,11 @@ function Income() {
     const [payments, setPayments] = useState([]);
     const [statistics, setStatistics] = useState([]);
 
-    const [loginID, setLoginID] = useState([]);
-
     useEffect(() => {
         if (!localStorage.getItem('author')) {
             history.push('/sign-in');
         } else {
-
-            if (localStorage.getItem('author') != 'admin') {
-                Axios.get(`http://localhost:3001/author/getauthorid/${localStorage.getItem('author')}`).then((respons) => {
-                    setLoginID(respons.data[0].author_id);
-                })
-            } else {
-                getPayments();
-            }
+            getPayments();
         }
     }, [])
 

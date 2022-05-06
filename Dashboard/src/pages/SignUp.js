@@ -1,21 +1,13 @@
-import React, { useState } from "react";
-import { useHistory, Link } from 'react-router-dom'
 import {
-  Layout,
-  Select,
-  Button,
-  message,
-  Card,
-  Form,
-  Input,
-  Checkbox,
+  Button, Card, Checkbox, Form,
+  Input, Layout, message, Select
 } from "antd";
-
 import Axios from 'axios';
+import React, { useState } from "react";
+import { Link, useHistory } from 'react-router-dom';
+
 
 const { Footer, Content } = Layout;
-
-
 const { Option } = Select;
 
 function handleChange(value) {
@@ -48,7 +40,7 @@ function SignUp() {
     console.log(email);
 
     Axios.put('http://localhost:3001/author/accept', values
-    ).then((respons) => {
+    ).then(() => {
       message.success('Your Registration is Success!');
       history.push("/sign-in");
     })

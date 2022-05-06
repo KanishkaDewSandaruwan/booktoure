@@ -19,7 +19,7 @@ function Profile() {
 
   useEffect(() => {
 
-    if (localStorage.getItem('author') != 'admin') {
+    if (localStorage.getItem('author') !== 'admin') {
       getAurthor();
     } else {
       history.push('/sign-in');
@@ -42,7 +42,7 @@ function Profile() {
 
   const confirm = () => {
 
-    books.map((val) => {
+    books.map((val, i) => {
       Axios.delete(`http://localhost:3001/cart/deletebyBookID/${val.book_id}`);
       Axios.delete(`http://localhost:3001/download/deletebyBookID/${val.book_id}`);
       Axios.delete(`http://localhost:3001/book/delete/${val.book_id}`);
@@ -107,7 +107,7 @@ function Profile() {
 
     Axios.get(`http://localhost:3001/author/edit/detailsvalidate/${localStorage.getItem('author')}`).then((respons) => {
 
-      if (respons.data[0].password != values.c_password) {
+      if (respons.data[0].password !== values.c_password) {
         message.warning("Password is Not Match");
       } else {
 

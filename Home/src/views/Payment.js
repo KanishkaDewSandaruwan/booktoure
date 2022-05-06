@@ -1,38 +1,13 @@
-import React, { useEffect } from "react";
-import { Button, message, PageHeader, Row, Statistic } from "antd";
-
-import {
-    Col,
-    Card,
-    Table,
-    Upload,
-    Image,
-    Avatar,
-    Typography,
-    Popconfirm,
-    Modal,
-    Space,
-} from "antd";
-import {
-    Form,
-    Input,
-    Radio,
-    Select,
-} from 'antd';
-
-import Navbar from "components/Navbars/IndexNavbar.js";
-import Footer from "components/Footers/Footer.js";
-import { useState } from "react";
+import { PageHeader, Table } from "antd";
 import Axios from 'axios';
+import Footer from "components/Footers/Footer.js";
+import Navbar from "components/Navbars/IndexNavbar.js";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faBookReader, faCreditCard, faDownload, faHighlighter, faLink, faMessage, faPaperPlane, faUser } from "@fortawesome/free-solid-svg-icons";
-
 
 export default function Payment() {
 
     const history = useHistory();
-    const [category, setCategory] = useState();
     const [header, setHeader] = useState([]);
     const [payment, setGetPayment] = useState([]);
 
@@ -100,9 +75,6 @@ export default function Payment() {
             setHeader(respons.data);
         })
     }
-    const download = () => {
-
-    }
 
     const routes = [
         {
@@ -123,7 +95,7 @@ export default function Payment() {
         <>
             <Navbar onLoad={loadData} transparent />
             <main className="profile-page">
-                {header.map((val, key) => {
+                {header.map((val) => {
                     const ImageURL = 'http://localhost:3001/settings/' + val.second_header_image;
                     return (<>
                         <section className="relative block h-500-px">

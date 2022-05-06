@@ -1,16 +1,11 @@
-import React, { useEffect } from "react";
-import { message, PageHeader } from "antd";
-
-import Navbar from "components/Navbars/IndexNavbar.js";
-import Footer from "components/Footers/Footer.js";
-import { useState } from "react";
-import Axios from 'axios';
-import { useHistory } from "react-router-dom";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faMessage, faPaperPlane, faUser } from "@fortawesome/free-solid-svg-icons";
-
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { message, PageHeader } from "antd";
+import Axios from 'axios';
+import Footer from "components/Footers/Footer.js";
+import Navbar from "components/Navbars/IndexNavbar.js";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 export default function Category(props) {
 
@@ -38,7 +33,7 @@ export default function Category(props) {
             }
 
             Axios.post("http://localhost:3001/cart/addtocart", data)
-                .then((respons) => {
+                .then(() => {
                     message.success('Product Added to Cart!');
                 }).catch((err) => {
                     console.log(err);
@@ -78,7 +73,7 @@ export default function Category(props) {
         <>
             <Navbar onLoad={loadData} transparent />
             <main className="profile-page">
-                {header.map((val, key) => {
+                {header.map((val) => {
                     const ImageURL = 'http://localhost:3001/settings/' + val.second_header_image;
                     return (<>
                         <section className="relative block h-500-px">
@@ -108,7 +103,7 @@ export default function Category(props) {
                     )
                 })}
                 <section className="relative py-16 bg-blueGray-200">
-                    {getBook.map((value, key) => (
+                    {getBook.map((value) => (
                         <div className="container mx-auto px-4" style={{ marginTop: '20%' }}>
                             <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
                                 <div className="px-6">

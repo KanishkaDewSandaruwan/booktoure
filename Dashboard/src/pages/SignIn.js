@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useHistory, Link } from 'react-router-dom'
 import {
-  Layout,
-  Button,
-  Row,
-  Col,
-  Typography,
-  Form,
-  Input,
-  message
+  Button, Col, Form,
+  Input, Layout, message, Row, Typography
 } from "antd";
-
 import Axios from 'axios';
-import signinbg from "../assets/images/img-signin.jpg";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from 'react-router-dom';
+
 
 const { Title } = Typography;
 const { Footer, Content } = Layout;
