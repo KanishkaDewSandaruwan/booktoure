@@ -65,23 +65,6 @@ function Payments() {
 
                 </Col>
               </Row>
-              {localStorage.getItem('author') == 'admin' ?
-                <>
-                  <Row>
-                    <Col style={{ padding: '10px' }}>
-                      <Row>
-                        <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>CURRENT  TOTAL INCOME : </h1>
-                      </Row>
-                    </Col>
-                    <Col style={{ padding: '10px' }}>
-                      <Row style={{ textAlign: 'center' }}>
-                        <h1 style={{ color: 'green', textAlign: 'center', fontWeight: 'bold' }}>{new Date().toLocaleString('en-us', { month: 'short', year: 'numeric' })}</h1>
-                      </Row>
-
-                    </Col>
-                  </Row>
-                </>
-                : <></>}
             </div>
           </Col>
         </Row>
