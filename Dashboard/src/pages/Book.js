@@ -286,7 +286,7 @@ function Book() {
                       >
                         <Input />
                       </Form.Item>
-                      <a href="tutorial" style={{ padding: '10px' }}><ExclamationOutlined />Learn how to get ISBN </a>
+                      <p style={{fontWeight : 'bold', padding: '10px'}}>Refer "Tutorial" for Learn how to get ISBN</p>
                       <Form.Item label="Book Highlight" name="highlight"
                         rules={[{ required: true, message: 'Please Add Your Book Highlights' }]}
                       >
@@ -312,6 +312,9 @@ function Book() {
                         >
                           <Button icon={<UploadOutlined />}>Upload</Button>
                         </Upload>
+                      </Form.Item>
+                      <Form.Item>
+                        <a href="https://www.office.com/launch/word?ui=en-US&rs=US&auth=1" style={{ padding: '10px' }}><ExclamationOutlined />Try t create your Book pdf with MS Word (Save your file with .pdf extension) </a>
                       </Form.Item>
                     </Form>
 
@@ -446,7 +449,7 @@ function Book() {
                     <h1><a href={`http://localhost:3001/pdf/${val.pdf_file}`}>{val.pdf_file}</a></h1>
                   </Col>
                 </Row>
-                <Row style={{marginTop: '5%'}}>
+                <Row style={{ marginTop: '5%' }}>
                   <Col span={6}>
                     <h1>Book Preview : </h1>
                   </Col>
@@ -456,7 +459,7 @@ function Book() {
                     </object>
                   </Col>
                 </Row>
-                <Row style={{marginTop: '5%'}}>
+                <Row style={{ marginTop: '5%' }}>
                   <Col span={6}>
                     <h1>Category : </h1>
                   </Col>

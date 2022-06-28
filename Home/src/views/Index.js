@@ -23,22 +23,10 @@ export default function Index() {
   return (
     <>
       <IndexNavbar fixed />
-      <section className="header relative pt-16 items-center flex h-screen max-h-860-px">
+      <section className="header relative pt-16 items-center flex  max-h-860-px">
         {header.map((val) => {
           const ImageURL = 'http://localhost:3001/settings/'+ val.header_image;
           return (<>
-            <div className="container mx-auto items-center flex flex-wrap">
-              <div className="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
-                <div className="pt-32 sm:pt-0">
-                  <h2 className="font-semibold text-4xl text-blueGray-600">
-                    {val.title}
-                  </h2>
-                  <p className="mt-4 text-lg leading-relaxed text-blueGray-500">
-                    {val.description}
-                  </p>
-                </div>
-              </div>
-            </div>
 
             <img
               className="absolute top-0 b-auto right-0 pt-16 sm:w-6/12 -mt-48 sm:mt-0 w-10/12 max-h-860px"
